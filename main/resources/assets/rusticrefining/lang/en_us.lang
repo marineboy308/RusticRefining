@@ -1,0 +1,13 @@
+container.block_filter=Material Filter
+
+itemGroup.rusticrefiningtab=Rustic Refining
+
+item.ball_dirt.name=Ball o' Dirt
+item.pebble.name=Pebble
+
+item.shard_iron.name=Iron Shard
+item.shard_gold.name=Gold Shard
+item.shard_diamond.name=Diamond Shard
+item.shard_emerald.name=Emerald Shard
+
+tile.block_filter.name=Material Filter

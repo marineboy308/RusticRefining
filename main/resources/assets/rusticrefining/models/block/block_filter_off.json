@@ -1,0 +1,12 @@
+{
+	"parent": "block/orientable",
+	"textures": {
+		"up": "rusticrefining:blocks/block_filter_top",
+		"down": "rusticrefining:blocks/block_filter_top",
+		"north": "rusticrefining:blocks/block_filter_front_off",
+		"east": "rusticrefining:blocks/block_filter_side",
+		"south": "rusticrefining:blocks/block_filter_side",
+		"west": "rusticrefining:blocks/block_filter_side",
+		"particle": "minecraft:blocks/hopper_outside"
+	}
+}

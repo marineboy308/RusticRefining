@@ -1,0 +1,16 @@
+[
+{
+  "modid": "rusticrefining",
+  "name": "Rustic Refining",
+  "description": "Refine materials into their core components!",
+  "version": "1.0 - Alpha",
+  "mcversion": "${1.12.2}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["marineboy308"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

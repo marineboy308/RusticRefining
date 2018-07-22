@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern": [
+		"BB",
+		"BB"
+	],
+	
+	"key": {
+		"B": {
+			"item": "rusticrefining:ball_dirt"
+		}
+	},
+	
+	"result": {
+		"item": "minecraft:dirt",
+		"data": 0
+	}
+}
