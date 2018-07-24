@@ -1,6 +1,6 @@
 package marineboy308.mod.util.handlers;
 
-import marineboy308.mod.tileentity.TileEntityBlockFilter;
+import marineboy308.mod.objects.machines.MaterialFilter.TileEntityBlockFilter;
 import marineboy308.mod.util.Reference;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;

@@ -1,0 +1,14 @@
+{
+    "variants": {
+        "normal": {"model": "rusticrefining:material_filter_off" },
+        "facing=east,filtering=false": {"model": "rusticrefining:material_filter_off", "y": 270 },
+        "facing=west,filtering=false": {"model": "rusticrefining:material_filter_off", "y": 90 },
+        "facing=south,filtering=false": {"model": "rusticrefining:material_filter_off", "y": 0 },
+        "facing=north,filtering=false": {"model": "rusticrefining:material_filter_off", "y": 180 },
+        
+        "facing=east,filtering=true": {"model": "rusticrefining:material_filter_on", "y": 270 },
+        "facing=west,filtering=true": {"model": "rusticrefining:material_filter_on", "y": 90 },
+        "facing=south,filtering=true": {"model": "rusticrefining:material_filter_on", "y": 0 },
+        "facing=north,filtering=true": {"model": "rusticrefining:material_filter_on", "y": 180 }
+    }
+}

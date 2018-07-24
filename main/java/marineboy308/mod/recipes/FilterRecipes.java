@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.Maps;
 
+import marineboy308.mod.init.BlockInit;
 import marineboy308.mod.init.ItemInit;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -26,8 +27,10 @@ public class FilterRecipes {
 
     private FilterRecipes()
     {
-        addFilteringRecipeForBlock(Blocks.DIRT, new ItemStack(ItemInit.BALL_DIRT, 3), new ItemStack(ItemInit.SHARD_GOLD, 1), 0.25F, 0.5F);
-        addFilteringRecipeForBlock(Blocks.GRAVEL, new ItemStack(ItemInit.PEBBLE, 3), new ItemStack(ItemInit.SHARD_IRON, 1), 0.3F, 0.5F);
+        addFilteringRecipeForBlock(Blocks.DIRT, new ItemStack(ItemInit.BALL_DIRT, 4), new ItemStack(ItemInit.SHARD_GOLD, 1), 0.25F, 0.0F);
+        addFilteringRecipeForBlock(Blocks.GRAVEL, new ItemStack(ItemInit.PEBBLE, 4), new ItemStack(ItemInit.SHARD_IRON, 1), 0.3F, 0.0F);
+        addFilteringRecipeForBlock(Blocks.SAND, new ItemStack(ItemInit.PILE_SAND, 2), new ItemStack(ItemInit.SHARD_DIAMOND, 1), 0.05F, 0.0F);
+        addFilteringRecipeForBlock(BlockInit.CONDENSED_DIRT, new ItemStack(Blocks.DIRT, 4), new ItemStack(ItemInit.SHARD_GOLD, 4), 0.5F, 0.0F);
     }
 
     public void addFilteringRecipeForBlock(Block input, ItemStack output1, ItemStack output2, float chance, float experience)
@@ -98,7 +101,7 @@ public class FilterRecipes {
         return this.filteringList;
     }
     
-    public Map<ItemStack, ItemStack> getFilteringChanceList()
+    public Map<ItemStack, ItemStack> getFilteringChanceItemList()
     {
         return this.filteringChanceItemList;
     }

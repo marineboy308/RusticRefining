@@ -1,7 +1,7 @@
 package marineboy308.mod.tabs;
 
+import marineboy308.mod.init.BlockInit;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -14,6 +14,6 @@ public class RusticRefiningTab extends CreativeTabs {
 
 	@Override
 	public ItemStack getTabIconItem() {
-		return new ItemStack(Item.getItemFromBlock(Blocks.SAND));
+		return new ItemStack(Item.getItemFromBlock(BlockInit.MATERIAL_FILTER));
 	}
 }

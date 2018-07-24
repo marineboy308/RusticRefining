@@ -1,8 +1,8 @@
 package marineboy308.mod.util.handlers;
 
-import marineboy308.mod.container.ContainerBlockFilter;
-import marineboy308.mod.container.gui.GuiBlockFilter;
-import marineboy308.mod.tileentity.TileEntityBlockFilter;
+import marineboy308.mod.objects.machines.MaterialFilter.ContainerBlockFilter;
+import marineboy308.mod.objects.machines.MaterialFilter.GuiBlockFilter;
+import marineboy308.mod.objects.machines.MaterialFilter.TileEntityBlockFilter;
 import marineboy308.mod.util.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;

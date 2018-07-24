@@ -1,13 +1,29 @@
-container.block_filter=Material Filter
+container.material_filter=Material Filter
 
 itemGroup.rusticrefiningtab=Rustic Refining
 
 item.ball_dirt.name=Ball o' Dirt
 item.pebble.name=Pebble
+item.pile_sand.name=Pile o' Sand
 
-item.shard_iron.name=Iron Shard
-item.shard_gold.name=Gold Shard
-item.shard_diamond.name=Diamond Shard
-item.shard_emerald.name=Emerald Shard
+item.shard_iron.name=Iron Shards
+item.shard_gold.name=Gold Shards
+item.shard_diamond.name=Diamond Shards
+item.shard_emerald.name=Emerald Shards
 
-tile.block_filter.name=Material Filter
+item.upgrade_speed_1.name=Speed Upgrade I
+item.upgrade_speed_2.name=Speed Upgrade II
+item.upgrade_speed_3.name=Speed Upgrade III
+
+item.upgrade_double_1.name=Double Upgrade I
+item.upgrade_double_2.name=Double Upgrade II
+item.upgrade_double_3.name=Double Upgrade III
+
+item.upgrade_chance_1.name=Chance Upgrade I
+item.upgrade_chance_2.name=Chance Upgrade II
+item.upgrade_chance_3.name=Chance Upgrade III
+item.upgrade_chance_4.name=Chance Upgrade IV
+
+tile.material_filter.name=Material Filter
+
+tile.condensed_dirt.name=Condensed Dirt
