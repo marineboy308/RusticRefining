@@ -8,5 +8,6 @@ public class Reference {
 	public static final String CLIENT = "marineboy308.mod.proxy.ClientProxy";
 	public static final String COMMON = "marineboy308.mod.proxy.CommonProxy";
 	
-	public static final int GUI_BLOCK_FILTER = 0;
+	public static final int GUI_MATERIAL_FILTER = 0;
+	public static final int GUI_CONDENSER = 1;
 }

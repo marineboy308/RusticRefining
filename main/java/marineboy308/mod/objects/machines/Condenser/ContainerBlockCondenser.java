@@ -1,8 +1,7 @@
-	package marineboy308.mod.objects.machines.MaterialFilter;
+	package marineboy308.mod.objects.machines.Condenser;
 
-import marineboy308.mod.objects.machines.MaterialFilter.slots.SlotBlockFilterInput;
-import marineboy308.mod.objects.machines.MaterialFilter.slots.SlotBlockFilterOutput;
-import marineboy308.mod.objects.machines.MaterialFilter.slots.SlotBlockFilterUpgrades;
+import marineboy308.mod.objects.machines.Condenser.slots.SlotBlockCondenserOutput;
+import marineboy308.mod.objects.machines.Condenser.slots.SlotBlockCondenserUpgrades;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -13,32 +12,34 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ContainerBlockFilter extends Container {
+public class ContainerBlockCondenser extends Container {
 
-	private final IInventory tileBlockFilter;
-    private int filterTime;
-    private int totalFilterTime;
-    private int filteringTime;
+	private final IInventory tileBlockCondenser;
+    private int condenseTime;
+    private int totalCondensingTime;
+    private int condensingTime;
 
-    public ContainerBlockFilter(InventoryPlayer playerInventory, IInventory inventory)
+    public ContainerBlockCondenser(InventoryPlayer playerInventory, IInventory inventory)
     {
-        this.tileBlockFilter = inventory;
-        this.addSlotToContainer(new SlotBlockFilterInput(inventory, 0, 44, 26));
-        this.addSlotToContainer(new SlotBlockFilterOutput(playerInventory.player,inventory, 1, 116, 26));
-        this.addSlotToContainer(new SlotBlockFilterOutput(playerInventory.player,inventory, 2, 134, 26));
-        this.addSlotToContainer(new SlotBlockFilterUpgrades(inventory, 3, 8, 26));
+        this.tileBlockCondenser = inventory;
+        this.addSlotToContainer(new Slot(inventory, 0, 44, 25));
+        this.addSlotToContainer(new Slot(inventory, 1, 44, 43));
+        this.addSlotToContainer(new Slot(inventory, 2, 62, 25));
+        this.addSlotToContainer(new Slot(inventory, 3, 62, 43));
+        this.addSlotToContainer(new SlotBlockCondenserOutput(playerInventory.player,inventory, 4, 134, 35));
+        this.addSlotToContainer(new SlotBlockCondenserUpgrades(inventory, 5, 8, 35));
 
         for (int i = 0; i < 3; ++i)
         {
             for (int j = 0; j < 9; ++j)
             {
-                this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 66 + i * 18));
+                this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 82 + i * 18));
             }
         }
 
         for (int k = 0; k < 9; ++k)
         {
-            this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 124));
+            this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 140));
         }
     }
 
@@ -46,7 +47,7 @@ public class ContainerBlockFilter extends Container {
     public void addListener(IContainerListener listener)
     {
         super.addListener(listener);
-        listener.sendAllWindowProperties(this, this.tileBlockFilter);
+        listener.sendAllWindowProperties(this, this.tileBlockCondenser);
     }
 
     @Override
@@ -58,41 +59,41 @@ public class ContainerBlockFilter extends Container {
         {
             IContainerListener icontainerlistener = this.listeners.get(i);
 
-            if (this.filterTime != this.tileBlockFilter.getField(1))
+            if (this.condenseTime != this.tileBlockCondenser.getField(1))
             {
-                icontainerlistener.sendWindowProperty(this, 1, this.tileBlockFilter.getField(1));
+                icontainerlistener.sendWindowProperty(this, 1, this.tileBlockCondenser.getField(1));
             }
 
-            if (this.filteringTime != this.tileBlockFilter.getField(0))
+            if (this.condensingTime != this.tileBlockCondenser.getField(0))
             {
-                icontainerlistener.sendWindowProperty(this, 0, this.tileBlockFilter.getField(0));
+                icontainerlistener.sendWindowProperty(this, 0, this.tileBlockCondenser.getField(0));
             }
 
-            if (this.totalFilterTime != this.tileBlockFilter.getField(2))
+            if (this.totalCondensingTime != this.tileBlockCondenser.getField(2))
             {
-                icontainerlistener.sendWindowProperty(this, 2, this.tileBlockFilter.getField(2));
+                icontainerlistener.sendWindowProperty(this, 2, this.tileBlockCondenser.getField(2));
             }
         }
 
-        this.filterTime = this.tileBlockFilter.getField(1);
-        this.filteringTime = this.tileBlockFilter.getField(0);
-        this.totalFilterTime = this.tileBlockFilter.getField(2);
+        this.condenseTime = this.tileBlockCondenser.getField(1);
+        this.condensingTime = this.tileBlockCondenser.getField(0);
+        this.totalCondensingTime = this.tileBlockCondenser.getField(2);
     }
 
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int id, int data)
     {
-        this.tileBlockFilter.setField(id, data);
+        this.tileBlockCondenser.setField(id, data);
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
-        return this.tileBlockFilter.isUsableByPlayer(playerIn);
+        return this.tileBlockCondenser.isUsableByPlayer(playerIn);
     }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-    	int inventorysize = 4;
+    	int inventorysize = 6;
         ItemStack previous = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 

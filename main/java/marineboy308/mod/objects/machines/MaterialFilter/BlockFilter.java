@@ -24,7 +24,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -73,12 +72,12 @@ public class BlockFilter extends BlockContainer implements IHasModel {
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
-		return false;
+		return true;
 	}
 	
 	@Override
 	public boolean isFullCube(IBlockState state) {
-		return false;
+		return true;
 	}
 	
 	@Override
@@ -92,11 +91,6 @@ public class BlockFilter extends BlockContainer implements IHasModel {
 	}
 	
 	@SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.CUTOUT_MIPPED;
-    }
-	
-	@SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
         return true;
     }
@@ -105,7 +99,7 @@ public class BlockFilter extends BlockContainer implements IHasModel {
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 
 		if(!worldIn.isRemote) {
-			playerIn.openGui(Main.instance, Reference.GUI_BLOCK_FILTER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(Main.instance, Reference.GUI_MATERIAL_FILTER, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		
 		return true;

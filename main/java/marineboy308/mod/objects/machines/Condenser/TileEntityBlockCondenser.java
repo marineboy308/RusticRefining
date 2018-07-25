@@ -3,10 +3,7 @@ package marineboy308.mod.objects.machines.Condenser;
 import java.util.Random;
 
 import marineboy308.mod.init.ItemInit;
-import marineboy308.mod.objects.machines.MaterialFilter.BlockFilter;
-import marineboy308.mod.objects.machines.MaterialFilter.ContainerBlockFilter;
 import marineboy308.mod.recipes.CondenserRecipes;
-import marineboy308.mod.recipes.FilterRecipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -139,9 +136,9 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
-        compound.setInteger("FilteringTime", (short)this.condensingTime);
-        compound.setInteger("FilterTime", (short)this.condenseTime);
-        compound.setInteger("FilterTimeTotal", (short)this.totalCondensingTime);
+        compound.setInteger("CondensingTime", (short)this.condensingTime);
+        compound.setInteger("CondenseTime", (short)this.condenseTime);
+        compound.setInteger("CondensingTimeTotal", (short)this.totalCondensingTime);
         ItemStackHelper.saveAllItems(compound, this.condenserItemStacks);
 
         if (this.hasCustomName())
@@ -180,9 +177,12 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
         }
 
         if (!this.world.isRemote) {
-            ItemStack itemstack = this.condenserItemStacks.get(0);
+            ItemStack input1 = this.condenserItemStacks.get(0);
+            ItemStack input2 = this.condenserItemStacks.get(1);
+            ItemStack input3 = this.condenserItemStacks.get(2);
+            ItemStack input4 = this.condenserItemStacks.get(3);
 
-            if (this.isCondensing() || !itemstack.isEmpty()) {
+            if (this.isCondensing() || !input1.isEmpty() && !input2.isEmpty() && !input3.isEmpty() && !input4.isEmpty()) {
                 if (!this.isCondensing() && this.canCondense()) {
                     this.condensingTime = this.getCondenseTime();
 
@@ -199,7 +199,7 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
                     {
                         this.condenseTime = 0;
                         this.totalCondensingTime = this.getCondenseTime();
-                        this.filterItem();
+                        this.condenseItem();
                         flag1 = true;
                     }
                 }
@@ -216,7 +216,7 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
             if (flag != this.isCondensing())
             {
                 flag1 = true;
-                BlockFilter.setState(this.isCondensing(), this.world, this.pos);
+                BlockCondenser.setState(this.isCondensing(), this.world, this.pos);
             }
         }
 
@@ -229,7 +229,7 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
     public int getCondenseTime()
     {
     	int time = 600;
-    	Item item = this.condenserItemStacks.get(3).getItem();
+    	Item item = this.condenserItemStacks.get(5).getItem();
     	if(isItemUpgrade()) {
     		if(item == ItemInit.UPGRADE_SPEED_1) {
         		return (int)((float)time * 0.75);
@@ -264,50 +264,42 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
         if (((ItemStack)this.condenserItemStacks.get(0)).isEmpty()) {
             return false;
         } else {
-            ItemStack result = FilterRecipes.instance().getFilteringResult(this.condenserItemStacks.get(0));
-            ItemStack chanceitem = FilterRecipes.instance().getFilteringChanceItemResult(this.condenserItemStacks.get(0));
+        	ItemStack[] stacks = new ItemStack[] {this.condenserItemStacks.get(0),this.condenserItemStacks.get(1),this.condenserItemStacks.get(2),this.condenserItemStacks.get(3)};
+            ItemStack result = CondenserRecipes.instance().getCondensingResult(stacks);
 
             if (result.isEmpty()) {
                 return false;
             } else {
-                ItemStack output1 = this.condenserItemStacks.get(1); /* Output For Result 1 */
-                ItemStack output2 = this.condenserItemStacks.get(2); /* Output For Result 2 [Chance Item] */
+                ItemStack output = this.condenserItemStacks.get(4);
                 
-                if (!output1.isEmpty() && output1.getItem() != result.getItem() || !output2.isEmpty() && output2.getItem() != chanceitem.getItem()) {
+                if (!output.isEmpty() && output.getItem() != result.getItem()) {
                 	return false;
-            	} else if ((output1.isEmpty() && output2.isEmpty()) || (output1.isEmpty() && output2.isItemEqual(chanceitem)) || (output1.isItemEqual(result) && output2.isEmpty())) {
+            	} else if (output.isEmpty() || output.isItemEqual(result)) {
                     return true;
-                } else if (output1.getCount() + result.getCount() <= this.getInventoryStackLimit() && output1.getCount() + result.getCount() <= output1.getMaxStackSize() && output2.getCount() + result.getCount() <= this.getInventoryStackLimit() && output2.getCount() + result.getCount() <= output2.getMaxStackSize()) {       
+                } else if (output.getCount() + result.getCount() <= this.getInventoryStackLimit() && output.getCount() + result.getCount() <= output.getMaxStackSize()) {       
                     return true;
                 } else {
-                    return output1.getCount() + result.getCount() <= result.getMaxStackSize() && output2.getCount() + result.getCount() <= result.getMaxStackSize();
+                    return output.getCount() + result.getCount() <= result.getMaxStackSize();
                 }
             }
         }
     }
 
-    public void filterItem() {
+    public void condenseItem() {
         if (this.canCondense()) {
-            ItemStack input = this.condenserItemStacks.get(0);
-            ItemStack output1 = this.condenserItemStacks.get(1);
-            ItemStack output2 = this.condenserItemStacks.get(2);
-            ItemStack result1 = FilterRecipes.instance().getFilteringResult(this.condenserItemStacks.get(0));
-            ItemStack result2 = FilterRecipes.instance().getFilteringChanceItemResult(this.condenserItemStacks.get(0));
+            ItemStack input1 = this.condenserItemStacks.get(0);
+            ItemStack input2 = this.condenserItemStacks.get(1);
+            ItemStack input3 = this.condenserItemStacks.get(2);
+            ItemStack input4 = this.condenserItemStacks.get(3);
+            ItemStack output = this.condenserItemStacks.get(4);
+            ItemStack[] inputs = new ItemStack[] {input1,input2,input3,input4};
+        	ItemStack result1 = CondenserRecipes.instance().getCondensingResult(inputs);
             
             ItemStack result = result1.copy();
             
-            float chance = FilterRecipes.instance().getFilteringChanceResult(this.condenserItemStacks.get(0));
-            
-            if (chance > 1.0F) {
-            	chance = 1.0F;
-            } else if (chance < 0.0F) {
-            	chance = 0.0F;
-            }
-            
             Random rand = new Random();
             
-            float chancevalue = rand.nextFloat();
-            int resultamount = rand.nextInt(upgradeOutput(result.getCount()+1));
+            int resultamount = rand.nextInt(upgradeOutput(result.getCount()));
             
             if(resultamount == 0) {
             	resultamount = 1;
@@ -315,27 +307,19 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
             
             result.setCount(resultamount);
             
-            if (chancevalue < chance ? output1.getCount() + result.getCount() <= this.getInventoryStackLimit() && 
-            		output1.getCount() + result.getCount() <= output1.getMaxStackSize() && 
-            		output2.getCount() + result2.getCount() <= this.getInventoryStackLimit() && 
-            		output2.getCount() + result2.getCount() <= output2.getMaxStackSize() : 
-            		output1.getCount() + result.getCount() <= this.getInventoryStackLimit() && 
-            		output1.getCount() + result.getCount() <= output1.getMaxStackSize()) {
+            if (output.getCount() + result.getCount() <= this.getInventoryStackLimit() && 
+            		output.getCount() + result.getCount() <= output.getMaxStackSize()) {
             	
-            	if (output1.isEmpty()) {
+            	if (output.isEmpty()) {
 	                this.condenserItemStacks.set(1, result.copy());
-	            } else if (output1.getItem() == result.getItem()) {
-	            	output1.grow(result.getCount());
+	            } else if (output.getItem() == result.getItem()) {
+	            	output.grow(result.getCount());
 	            }
-	
-	            if (chancevalue < chance) {
-	            	if (output2.isEmpty()) {
-	            		this.condenserItemStacks.set(2, result2.copy());
-	            	} else if (output2.getItem() == result2.getItem()) {
-	            		output2.grow(result2.getCount());
-	            	}
-	            }
-	            input.shrink(1);
+
+	            input1.shrink(1);
+	            input2.shrink(1);
+	            input3.shrink(1);
+	            input4.shrink(1);
             }
         }
     }
@@ -424,6 +408,14 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
     		return true;
     	} else if(item == ItemInit.UPGRADE_DOUBLE_3) {
     		return true;
+    	} else if(item == ItemInit.UPGRADE_CHANCE_1) {
+    		return true;
+    	} else if(item == ItemInit.UPGRADE_CHANCE_2) {
+    		return true;
+    	} else if(item == ItemInit.UPGRADE_CHANCE_3) {
+    		return true;
+    	} else if(item == ItemInit.UPGRADE_CHANCE_4) {
+    		return true;
     	}
     	return false;
     }
@@ -431,8 +423,10 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack)
     {
-        if (index != 0 && index != 4) {
+        if (index == 4) {
             return false;
+        } else if(isItemUpgrade()) {
+        	return true;
         } else {
             return canItemBeCondensed();
         }
@@ -476,7 +470,7 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
     @Override
     public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
     {
-        return new ContainerBlockFilter(playerInventory, this);
+        return new ContainerBlockCondenser(playerInventory, this);
     }
 
     @Override

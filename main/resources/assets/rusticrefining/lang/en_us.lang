@@ -1,4 +1,5 @@
 container.material_filter=Material Filter
+container.condenser=Condenser
 
 itemGroup.rusticrefiningtab=Rustic Refining
 
@@ -25,5 +26,6 @@ item.upgrade_chance_3.name=Chance Upgrade III
 item.upgrade_chance_4.name=Chance Upgrade IV
 
 tile.material_filter.name=Material Filter
+tile.condenser.name=Condenser
 
 tile.condensed_dirt.name=Condensed Dirt

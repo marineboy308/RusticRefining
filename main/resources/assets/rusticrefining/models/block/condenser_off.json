@@ -1,0 +1,12 @@
+{
+	"parent": "block/orientable",
+	"textures": {
+		"up": "rusticrefining:blocks/condenser_top",
+		"down": "rusticrefining:blocks/machine_out",
+		"north": "rusticrefining:blocks/condenser_front_off",
+		"east": "rusticrefining:blocks/machine_side",
+		"south": "rusticrefining:blocks/machine_side",
+		"west": "rusticrefining:blocks/machine_in",
+		"particle": "minecraft:blocks/machine_side"
+	}
+}

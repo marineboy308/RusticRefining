@@ -392,6 +392,14 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
     		return true;
     	} else if(item == ItemInit.UPGRADE_DOUBLE_3) {
     		return true;
+    	} else if(item == ItemInit.UPGRADE_CHANCE_1) {
+    		return true;
+    	} else if(item == ItemInit.UPGRADE_CHANCE_2) {
+    		return true;
+    	} else if(item == ItemInit.UPGRADE_CHANCE_3) {
+    		return true;
+    	} else if(item == ItemInit.UPGRADE_CHANCE_4) {
+    		return true;
     	}
     	return false;
     }

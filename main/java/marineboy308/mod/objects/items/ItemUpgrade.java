@@ -8,26 +8,29 @@ import marineboy308.mod.util.interfaces.IHasModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class ItemUpgrade extends Item implements IHasModel {
 	
-	private String tooltip = "";
+	private String tooltip;
+	private TextFormatting color;
 
-	public ItemUpgrade(String name, String tooltip) {
+	public ItemUpgrade(String name, String tooltip, TextFormatting color) {
 		
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(Main.rusticrefiningtab);
 		
 		this.tooltip = tooltip;
+		this.color = color;
 		
 		ItemInit.ITEMS.add(this);
 	}
 	
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		tooltip.add(this.tooltip);
+		tooltip.add(this.color + this.tooltip);
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 	
