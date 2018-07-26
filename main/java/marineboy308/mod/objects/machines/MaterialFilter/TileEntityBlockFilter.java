@@ -4,6 +4,7 @@ import java.util.Random;
 
 import marineboy308.mod.init.ItemInit;
 import marineboy308.mod.recipes.FilterRecipes;
+import marineboy308.mod.util.handlers.UpgradeHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -13,6 +14,8 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -111,7 +114,7 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
         this.filterCustomName = name;
     }
 
-    public static void registerFixesFilter(DataFixer fixer)
+    public static void registerFixes(DataFixer fixer)
     {
         fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityBlockFilter.class, new String[] {"Items"}));
     }
@@ -147,6 +150,38 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
         }
 
         return compound;
+    }
+    
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        int metadata = getBlockMetadata();
+        return new SPacketUpdateTileEntity(pos, metadata, nbt);
+    }
+ 
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        readFromNBT(pkt.getNbtCompound());
+    }
+ 
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        return nbt;
+    }
+ 
+    @Override
+    public void handleUpdateTag(NBTTagCompound tag) {
+        readFromNBT(tag);
+    }
+ 
+    @Override
+    public NBTTagCompound getTileData() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        return nbt;
     }
 
     @Override
@@ -227,7 +262,7 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
     {
     	int time = 200;
     	Item item = this.filterItemStacks.get(3).getItem();
-    	if(isItemUpgrade()) {
+    	if(UpgradeHandler.isItemUpgrade(item)) {
     		if(item == ItemInit.UPGRADE_SPEED_1) {
         		return (int)((float)time * 0.75);
         	} else if(item == ItemInit.UPGRADE_SPEED_2) {
@@ -243,7 +278,7 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
     
     public int upgradeOutput(int amount) {
     	Item item = this.filterItemStacks.get(3).getItem();
-    	if(isItemUpgrade()) {
+    	if(UpgradeHandler.isItemUpgrade(item)) {
     		if(item == ItemInit.UPGRADE_DOUBLE_1) {
         		return amount + (int)((float)amount * 0.3);
         	} else if(item == ItemInit.UPGRADE_DOUBLE_2) {
@@ -294,6 +329,20 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
             ItemStack result = result1.copy();
             
             float chance = FilterRecipes.instance().getFilteringChanceResult(this.filterItemStacks.get(0));
+            
+            Item item = this.filterItemStacks.get(3).getItem();
+            
+            if(UpgradeHandler.isItemUpgrade(item)) {
+            	if(item == ItemInit.UPGRADE_CHANCE_1) {
+            		chance = chance + (chance * 0.1F);
+            	} else if(item == ItemInit.UPGRADE_CHANCE_2) {
+            		chance = chance + (chance * 0.2F);
+            	} else if(item == ItemInit.UPGRADE_CHANCE_3) {
+            		chance = chance + (chance * 0.4F);
+            	} else if(item == ItemInit.UPGRADE_CHANCE_4) {
+            		chance = chance + (chance * 0.8F);
+            	}
+            }
             
             if (chance > 1.0F) {
             	chance = 1.0F;
@@ -373,51 +422,6 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
     public static boolean isItemFilterable(ItemStack stack) {
     	ItemStack result = FilterRecipes.instance().getFilteringResult(stack);
     	if (!result.isEmpty()) {
-    		return true;
-    	}
-    	return false;
-    }
-    
-    public boolean isItemUpgrade() {
-    	Item item = this.filterItemStacks.get(3).getItem();
-    	if(item == ItemInit.UPGRADE_SPEED_1) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_SPEED_2) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_SPEED_3) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_1) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_2) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_3) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_1) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_2) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_3) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_4) {
-    		return true;
-    	}
-    	return false;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public static boolean isItemUpgrade(ItemStack stack) {
-    	Item item = stack.getItem();
-    	if(item == ItemInit.UPGRADE_SPEED_1) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_SPEED_2) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_SPEED_3) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_1) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_2) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_3) {
     		return true;
     	}
     	return false;

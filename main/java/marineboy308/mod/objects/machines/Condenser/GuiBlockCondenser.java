@@ -35,7 +35,7 @@ public class GuiBlockCondenser extends GuiContainer {
 		this.drawTexturedModalRect(this.guiLeft + 91, this.guiTop + 35, 176, 0, k + 1, 16);
 		int j = this.getCondensingLeftScaled(18);
 		this.drawTexturedModalRect(this.guiLeft + 43, this.guiTop + 62 + 17 - j, 176, 18 + 18 - j, 37, j + 1);
-		this.drawTexturedModalRect(this.guiLeft + 43, this.guiTop + 4 + j, 176, 38 + j, 37, j + 1);
+		this.drawTexturedModalRect(this.guiLeft + 43, this.guiTop + 4, 176, 38, 37, j + 1);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import marineboy308.mod.init.ItemInit;
 import marineboy308.mod.recipes.CondenserRecipes;
+import marineboy308.mod.util.handlers.UpgradeHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -13,6 +14,8 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -30,6 +33,8 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
     private static final int[] INPUT_SLOTS = new int[] {0, 1, 2, 3};
     
     private NonNullList<ItemStack> condenserItemStacks = NonNullList.<ItemStack>withSize(6, ItemStack.EMPTY);
+    
+    private int level;
     
     private int condensingTime;
     private int condenseTime;
@@ -111,9 +116,17 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
         this.condenserCustomName = name;
     }
 
-    public static void registerFixesFilter(DataFixer fixer)
+    public static void registerFixes(DataFixer fixer)
     {
         fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityBlockCondenser.class, new String[] {"Items"}));
+    }
+    
+    public static int getLevel(IInventory inventory) {
+    	return inventory.getField(3);
+    }
+    
+    public static void setLevel(IInventory inventory) {
+    	inventory.setField(3, inventory.getField(3)+1);
     }
 
     @Override
@@ -125,6 +138,7 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
         this.condensingTime = compound.getInteger("CondensingTime");
         this.condenseTime = compound.getInteger("CondenseTime");
         this.totalCondensingTime = compound.getInteger("CondensingTimeTotal");
+        this.level = compound.getInteger("Level");
 
         if (compound.hasKey("CustomName", 8))
         {
@@ -139,6 +153,7 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
         compound.setInteger("CondensingTime", (short)this.condensingTime);
         compound.setInteger("CondenseTime", (short)this.condenseTime);
         compound.setInteger("CondensingTimeTotal", (short)this.totalCondensingTime);
+        compound.setInteger("Level", (short)this.level);
         ItemStackHelper.saveAllItems(compound, this.condenserItemStacks);
 
         if (this.hasCustomName())
@@ -147,6 +162,38 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
         }
 
         return compound;
+    }
+    
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        int metadata = getBlockMetadata();
+        return new SPacketUpdateTileEntity(pos, metadata, nbt);
+    }
+ 
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        readFromNBT(pkt.getNbtCompound());
+    }
+ 
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        return nbt;
+    }
+ 
+    @Override
+    public void handleUpdateTag(NBTTagCompound tag) {
+        readFromNBT(tag);
+    }
+ 
+    @Override
+    public NBTTagCompound getTileData() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        return nbt;
     }
 
     @Override
@@ -230,7 +277,7 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
     {
     	int time = 600;
     	Item item = this.condenserItemStacks.get(5).getItem();
-    	if(isItemUpgrade()) {
+    	if(UpgradeHandler.isItemUpgrade(item)) {
     		if(item == ItemInit.UPGRADE_SPEED_1) {
         		return (int)((float)time * 0.75);
         	} else if(item == ItemInit.UPGRADE_SPEED_2) {
@@ -245,8 +292,8 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
     }
     
     public int upgradeOutput(int amount) {
-    	Item item = this.condenserItemStacks.get(3).getItem();
-    	if(isItemUpgrade()) {
+    	Item item = this.condenserItemStacks.get(5).getItem();
+    	if(UpgradeHandler.isItemUpgrade(item)) {
     		if(item == ItemInit.UPGRADE_DOUBLE_1) {
         		return amount + (int)((float)amount * 0.3);
         	} else if(item == ItemInit.UPGRADE_DOUBLE_2) {
@@ -311,7 +358,7 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
             		output.getCount() + result.getCount() <= output.getMaxStackSize()) {
             	
             	if (output.isEmpty()) {
-	                this.condenserItemStacks.set(1, result.copy());
+	                this.condenserItemStacks.set(4, result.copy());
 	            } else if (output.getItem() == result.getItem()) {
 	            	output.grow(result.getCount());
 	            }
@@ -366,66 +413,14 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
     	}
     	return false;
     }
-    
-    public boolean isItemUpgrade() {
-    	Item item = this.condenserItemStacks.get(3).getItem();
-    	if(item == ItemInit.UPGRADE_SPEED_1) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_SPEED_2) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_SPEED_3) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_1) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_2) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_3) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_1) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_2) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_3) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_4) {
-    		return true;
-    	}
-    	return false;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public static boolean isItemUpgrade(ItemStack stack) {
-    	Item item = stack.getItem();
-    	if(item == ItemInit.UPGRADE_SPEED_1) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_SPEED_2) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_SPEED_3) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_1) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_2) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_DOUBLE_3) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_1) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_2) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_3) {
-    		return true;
-    	} else if(item == ItemInit.UPGRADE_CHANCE_4) {
-    		return true;
-    	}
-    	return false;
-    }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack)
     {
+    	Item item = this.condenserItemStacks.get(5).getItem();
         if (index == 4) {
             return false;
-        } else if(isItemUpgrade()) {
+        } else if(UpgradeHandler.isItemUpgrade(item)) {
         	return true;
         } else {
             return canItemBeCondensed();
@@ -484,6 +479,8 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
                 return this.condenseTime;
             case 2:
                 return this.totalCondensingTime;
+            case 3:
+            	return this.level;
             default:
                 return 0;
         }
@@ -502,13 +499,15 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
                 break;
             case 2:
                 this.totalCondensingTime = value;
+            case 3:
+            	this.level = value;
         }
     }
 
     @Override
     public int getFieldCount()
     {
-        return 3;
+        return 4;
     }
 
     @Override

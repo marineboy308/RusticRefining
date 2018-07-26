@@ -6,6 +6,7 @@ import marineboy308.mod.Main;
 import marineboy308.mod.init.BlockInit;
 import marineboy308.mod.init.ItemInit;
 import marineboy308.mod.util.Reference;
+import marineboy308.mod.util.handlers.UpgradeHandler;
 import marineboy308.mod.util.interfaces.IHasModel;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
@@ -94,11 +95,20 @@ public class BlockCondenser extends BlockContainer implements IHasModel {
         return true;
     }
 	
+	
+	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
-		if(!worldIn.isRemote) {
-			playerIn.openGui(Main.instance, Reference.GUI_CONDENSER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+		Item handitem = playerIn.getHeldItem(hand).getItem();
+		ItemStack handstack = playerIn.getHeldItem(hand);
+		
+		if (UpgradeHandler.isItemBlockUpgrade(handitem) && UpgradeHandler.canUpgradeBlock(handitem, TileEntityBlockCondenser.getLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos)))) {
+			handstack.shrink(1);
+			TileEntityBlockCondenser.setLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos));
+		} else {
+			if(!worldIn.isRemote) {
+				playerIn.openGui(Main.instance, Reference.GUI_CONDENSER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			}
 		}
 		
 		return true;

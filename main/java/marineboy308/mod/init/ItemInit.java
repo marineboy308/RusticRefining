@@ -16,6 +16,16 @@ public class ItemInit {
 	public static final Item PEBBLE = new ItemBase("pebble");
 	public static final Item PILE_SAND = new ItemBase("pile_sand");
 	
+	public static final Item DUST_IRON = new ItemBase("dust_iron");
+	public static final Item DUST_GOLD = new ItemBase("dust_gold");
+	public static final Item DUST_DIAMOND = new ItemBase("dust_diamond");
+	public static final Item DUST_EMERALD = new ItemBase("dust_emerald");
+	
+	public static final Item PILE_IRON = new ItemBase("pile_iron");
+	public static final Item PILE_GOLD = new ItemBase("pile_gold");
+	public static final Item PILE_DIAMOND = new ItemBase("pile_diamond");
+	public static final Item PILE_EMERALD = new ItemBase("pile_emerald");
+	
 	public static final Item SHARD_IRON = new ItemBase("shard_iron");
 	public static final Item SHARD_GOLD = new ItemBase("shard_gold");
 	public static final Item SHARD_DIAMOND = new ItemBase("shard_diamond");
@@ -33,4 +43,9 @@ public class ItemInit {
 	public static final Item UPGRADE_CHANCE_2 = new ItemUpgrade("upgrade_chance_2","Increases Machine Secondary Output Chance By 20%", TextFormatting.GREEN);
 	public static final Item UPGRADE_CHANCE_3 = new ItemUpgrade("upgrade_chance_3","Increases Machine Secondary Output Chance By 40%", TextFormatting.GREEN);
 	public static final Item UPGRADE_CHANCE_4 = new ItemUpgrade("upgrade_chance_4","Increases Machine Secondary Output Chance By 80%", TextFormatting.GREEN);
+	
+	public static final Item BLOCKUPGRADE_IRON = new ItemUpgrade("blockupgrade_iron","Upgrade Machines To Iron", TextFormatting.AQUA);
+	public static final Item BLOCKUPGRADE_GOLD = new ItemUpgrade("blockupgrade_gold","Upgrade Machines From Iron To Gold", TextFormatting.AQUA);
+	public static final Item BLOCKUPGRADE_DIAMOND = new ItemUpgrade("blockupgrade_diamond","Upgrade Machines From Gold To Diamond", TextFormatting.AQUA);
+	public static final Item BLOCKUPGRADE_EMERALD = new ItemUpgrade("blockupgrade_emerald","Upgrade Machines From Diamond To Emerald", TextFormatting.AQUA);
 }

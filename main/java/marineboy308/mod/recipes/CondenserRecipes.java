@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.Maps;
 
 import marineboy308.mod.init.BlockInit;
+import marineboy308.mod.init.ItemInit;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -24,6 +25,9 @@ public class CondenserRecipes {
 
     private CondenserRecipes()
     {
+    	addCondensing(ItemInit.BALL_DIRT, ItemInit.BALL_DIRT, ItemInit.BALL_DIRT, ItemInit.BALL_DIRT, new ItemStack(Blocks.DIRT, 2, 0), 0.0F);
+    	addCondensing(ItemInit.PEBBLE, ItemInit.PEBBLE, ItemInit.PEBBLE, ItemInit.PEBBLE, new ItemStack(Blocks.GRAVEL, 2), 0.0F);
+    	addCondensing(ItemInit.PILE_SAND, ItemInit.PILE_SAND, ItemInit.PILE_SAND, ItemInit.PILE_SAND, new ItemStack(Blocks.SAND, 2, 0), 0.0F);
         addCondensingRecipeForBlock(Blocks.DIRT, Blocks.DIRT, Blocks.DIRT, Blocks.DIRT, new ItemStack(BlockInit.CONDENSED_DIRT, 1), 0.0F);
     }
 
@@ -60,7 +64,20 @@ public class CondenserRecipes {
 
     private boolean compareInputs(ItemStack[] stacks1, ItemStack[] stacks2)
     {
-        return stacks2.equals(stacks1);
+    	boolean flag1 = false;
+    	boolean flag2 = false;
+    	boolean flag3 = false;
+    	boolean flag4 = false;
+    	
+    	if(stacks2[0].getItem() == stacks1[0].getItem() && (stacks2[0].getMetadata() == 32767 || stacks2[0].getMetadata() == stacks1[0].getMetadata()))
+    		flag1 = true;
+    	if(stacks2[1].getItem() == stacks1[1].getItem() && (stacks2[1].getMetadata() == 32767 || stacks2[1].getMetadata() == stacks1[1].getMetadata()))
+    		flag2 = true;
+    	if(stacks2[2].getItem() == stacks1[2].getItem() && (stacks2[2].getMetadata() == 32767 || stacks2[2].getMetadata() == stacks1[2].getMetadata()))
+    		flag3 = true;
+    	if(stacks2[3].getItem() == stacks1[3].getItem() && (stacks2[3].getMetadata() == 32767 || stacks2[3].getMetadata() == stacks1[3].getMetadata()))
+    		flag4 = true;
+        return flag1 && flag2 && flag3 && flag4;
     }
     
     private boolean compareItemStacks(ItemStack stack1, ItemStack stack2)
