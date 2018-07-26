@@ -7,6 +7,16 @@ item.ball_dirt.name=Ball o' Dirt
 item.pebble.name=Pebble
 item.pile_sand.name=Pile o' Sand
 
+item.dust_iron.name=Iron Dust
+item.dust_gold.name=Gold Dust
+item.dust_diamond.name=Diamond Dust
+item.dust_emerald.name=Emerald Dust
+
+item.pile_iron.name=Pile o' Iron Shards
+item.pile_gold.name=Pile o' Gold Shards
+item.pile_diamond.name=Pile o' Diamond Shards
+item.pile_emerald.name=Pile o' Emerald Shards
+
 item.shard_iron.name=Iron Shards
 item.shard_gold.name=Gold Shards
 item.shard_diamond.name=Diamond Shards
@@ -24,6 +34,11 @@ item.upgrade_chance_1.name=Chance Upgrade I
 item.upgrade_chance_2.name=Chance Upgrade II
 item.upgrade_chance_3.name=Chance Upgrade III
 item.upgrade_chance_4.name=Chance Upgrade IV
+
+item.blockupgrade_iron.name=Iron Upgrade
+item.blockupgrade_gold.name=Gold Upgrade
+item.blockupgrade_diamond.name=Diamond Upgrade
+item.blockupgrade_emerald.name=Emerald Upgrade
 
 tile.material_filter.name=Material Filter
 tile.condenser.name=Condenser

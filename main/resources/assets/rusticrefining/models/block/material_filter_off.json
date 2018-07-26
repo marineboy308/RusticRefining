@@ -1,7 +1,7 @@
 {
 	"parent": "block/orientable",
 	"textures": {
-		"up": "rusticrefining:blocks/machine_filter_top",
+		"up": "rusticrefining:blocks/material_filter_top",
 		"down": "rusticrefining:blocks/machine_out",
 		"north": "rusticrefining:blocks/material_filter_front_off",
 		"east": "rusticrefining:blocks/machine_side",
