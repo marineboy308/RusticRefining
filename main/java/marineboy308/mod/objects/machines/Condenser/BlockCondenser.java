@@ -15,6 +15,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -37,6 +38,7 @@ public class BlockCondenser extends BlockContainer implements IHasModel {
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool CONDENSING = PropertyBool.create("condensing");
+	public static final PropertyInteger LEVEL = PropertyInteger.create("level", 0, 4);
 
 	public BlockCondenser(String name) {
 		
@@ -45,7 +47,7 @@ public class BlockCondenser extends BlockContainer implements IHasModel {
 		setRegistryName(name);
 		setCreativeTab(Main.rusticrefiningtab);
 		
-		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(CONDENSING, Boolean.valueOf(false)));
+		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(CONDENSING, Boolean.valueOf(false)).withProperty(LEVEL, Integer.valueOf(0)));
 		
 		setSoundType(SoundType.METAL);
 		setHardness(2.0F);
@@ -104,7 +106,7 @@ public class BlockCondenser extends BlockContainer implements IHasModel {
 		
 		if (UpgradeHandler.isItemBlockUpgrade(handitem) && UpgradeHandler.canUpgradeBlock(handitem, TileEntityBlockCondenser.getLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos)))) {
 			handstack.shrink(1);
-			TileEntityBlockCondenser.setLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos));
+			TileEntityBlockCondenser.updateLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos));
 		} else {
 			if(!worldIn.isRemote) {
 				playerIn.openGui(Main.instance, Reference.GUI_CONDENSER, worldIn, pos.getX(), pos.getY(), pos.getZ());
@@ -147,7 +149,7 @@ public class BlockCondenser extends BlockContainer implements IHasModel {
 	
 	@Override
 	 protected BlockStateContainer createBlockState() {
-		 return new BlockStateContainer(this, new IProperty[] {FACING,CONDENSING});
+		 return new BlockStateContainer(this, new IProperty[] {FACING,CONDENSING,LEVEL});
 	 }
 
 	 @Override

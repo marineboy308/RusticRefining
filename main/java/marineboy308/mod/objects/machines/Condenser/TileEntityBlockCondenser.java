@@ -125,7 +125,7 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
     	return inventory.getField(3);
     }
     
-    public static void setLevel(IInventory inventory) {
+    public static void updateLevel(IInventory inventory) {
     	inventory.setField(3, inventory.getField(3)+1);
     }
 
