@@ -15,9 +15,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ContainerBlockCondenser extends Container {
 
 	private final IInventory tileBlockCondenser;
+	
     private int condenseTime;
     private int totalCondensingTime;
     private int condensingTime;
+    
+    private int inventorysize = 6;
 
     public ContainerBlockCondenser(InventoryPlayer playerInventory, IInventory inventory)
     {
@@ -93,7 +96,6 @@ public class ContainerBlockCondenser extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-    	int inventorysize = 6;
         ItemStack previous = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 

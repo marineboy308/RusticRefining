@@ -4,6 +4,7 @@ import marineboy308.mod.Main;
 import marineboy308.mod.init.BlockInit;
 import marineboy308.mod.init.ItemInit;
 import marineboy308.mod.util.interfaces.IHasModel;
+import marineboy308.mod.util.oredict.OreDictionaryCompatibility;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -53,6 +54,7 @@ public class RegistryHandler {
 	
 	public static void initRegistries() {
 		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
+		OreDictionaryCompatibility.register();
 	}
 	
 	public static void postInitRegistries() {

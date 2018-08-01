@@ -1,5 +1,6 @@
 	package marineboy308.mod.objects.machines.MaterialFilter;
 
+import marineboy308.mod.objects.machines.MaterialFilter.slots.SlotBlockFilterFuel;
 import marineboy308.mod.objects.machines.MaterialFilter.slots.SlotBlockFilterInput;
 import marineboy308.mod.objects.machines.MaterialFilter.slots.SlotBlockFilterOutput;
 import marineboy308.mod.objects.machines.MaterialFilter.slots.SlotBlockFilterUpgrades;
@@ -15,30 +16,37 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ContainerBlockFilter extends Container {
 
-	private final IInventory tileBlockFilter;
+	private final IInventory tileBlock;
+	
     private int filterTime;
     private int totalFilterTime;
     private int filteringTime;
+    
+    private int energy;
+    private int maxEnergy;
+    
+    private int inventorysize = 5;
 
     public ContainerBlockFilter(InventoryPlayer playerInventory, IInventory inventory)
     {
-        this.tileBlockFilter = inventory;
-        this.addSlotToContainer(new SlotBlockFilterInput(inventory, 0, 44, 26));
-        this.addSlotToContainer(new SlotBlockFilterOutput(playerInventory.player,inventory, 1, 116, 26));
-        this.addSlotToContainer(new SlotBlockFilterOutput(playerInventory.player,inventory, 2, 134, 26));
-        this.addSlotToContainer(new SlotBlockFilterUpgrades(inventory, 3, 8, 26));
+        this.tileBlock = inventory;
+        this.addSlotToContainer(new SlotBlockFilterInput(inventory, 0, 44, 8));
+        this.addSlotToContainer(new SlotBlockFilterOutput(playerInventory.player,inventory, 1, 98, 31));
+        this.addSlotToContainer(new SlotBlockFilterOutput(playerInventory.player,inventory, 2, 44, 53));
+        this.addSlotToContainer(new SlotBlockFilterUpgrades(inventory, 3, 116, 62));
+        this.addSlotToContainer(new SlotBlockFilterFuel(inventory, 4, 152, 62));
 
         for (int i = 0; i < 3; ++i)
         {
             for (int j = 0; j < 9; ++j)
             {
-                this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 66 + i * 18));
+                this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
 
         for (int k = 0; k < 9; ++k)
         {
-            this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 124));
+            this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
     }
 
@@ -46,7 +54,7 @@ public class ContainerBlockFilter extends Container {
     public void addListener(IContainerListener listener)
     {
         super.addListener(listener);
-        listener.sendAllWindowProperties(this, this.tileBlockFilter);
+        listener.sendAllWindowProperties(this, this.tileBlock);
     }
 
     @Override
@@ -58,41 +66,52 @@ public class ContainerBlockFilter extends Container {
         {
             IContainerListener icontainerlistener = this.listeners.get(i);
 
-            if (this.filterTime != this.tileBlockFilter.getField(1))
+            if (this.filterTime != this.tileBlock.getField(1))
             {
-                icontainerlistener.sendWindowProperty(this, 1, this.tileBlockFilter.getField(1));
+                icontainerlistener.sendWindowProperty(this, 1, this.tileBlock.getField(1));
             }
 
-            if (this.filteringTime != this.tileBlockFilter.getField(0))
+            if (this.filteringTime != this.tileBlock.getField(0))
             {
-                icontainerlistener.sendWindowProperty(this, 0, this.tileBlockFilter.getField(0));
+                icontainerlistener.sendWindowProperty(this, 0, this.tileBlock.getField(0));
             }
 
-            if (this.totalFilterTime != this.tileBlockFilter.getField(2))
+            if (this.totalFilterTime != this.tileBlock.getField(2))
             {
-                icontainerlistener.sendWindowProperty(this, 2, this.tileBlockFilter.getField(2));
+                icontainerlistener.sendWindowProperty(this, 2, this.tileBlock.getField(2));
+            }
+            
+            if (this.energy != this.tileBlock.getField(3))
+            {
+                icontainerlistener.sendWindowProperty(this, 3, this.tileBlock.getField(3));
+            }
+            
+            if (this.maxEnergy != this.tileBlock.getField(4))
+            {
+                icontainerlistener.sendWindowProperty(this, 4, this.tileBlock.getField(4));
             }
         }
 
-        this.filterTime = this.tileBlockFilter.getField(1);
-        this.filteringTime = this.tileBlockFilter.getField(0);
-        this.totalFilterTime = this.tileBlockFilter.getField(2);
+        this.filterTime = this.tileBlock.getField(1);
+        this.filteringTime = this.tileBlock.getField(0);
+        this.totalFilterTime = this.tileBlock.getField(2);
+        this.energy = this.tileBlock.getField(3);
+        this.maxEnergy = this.tileBlock.getField(4);
     }
 
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int id, int data)
     {
-        this.tileBlockFilter.setField(id, data);
+        this.tileBlock.setField(id, data);
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
-        return this.tileBlockFilter.isUsableByPlayer(playerIn);
+        return this.tileBlock.isUsableByPlayer(playerIn);
     }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-    	int inventorysize = 4;
         ItemStack previous = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 
@@ -113,8 +132,8 @@ public class ContainerBlockFilter extends Container {
             	if (!this.mergeItemStack(current, 0, inventorysize, false)) {
                     return ItemStack.EMPTY;
                 }
-
-                slot.onSlotChange(current, previous);
+            	
+            	slot.onSlotChange(current, previous);
             }
 
             if (current.isEmpty()) {

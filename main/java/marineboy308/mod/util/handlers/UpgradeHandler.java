@@ -55,4 +55,18 @@ public class UpgradeHandler {
 		}
 		return false;
 	}
+	
+	public static Item[] dropUpgrades(int level) {
+		Item[] upgrades = new Item[] {};
+		if (level == 1) {
+			upgrades = new Item[] {ItemInit.BLOCKUPGRADE_IRON};
+		} else if (level == 2) {
+			upgrades = new Item[] {ItemInit.BLOCKUPGRADE_IRON,ItemInit.BLOCKUPGRADE_GOLD};
+		} else if (level == 3) {
+			upgrades = new Item[] {ItemInit.BLOCKUPGRADE_IRON,ItemInit.BLOCKUPGRADE_GOLD,ItemInit.BLOCKUPGRADE_DIAMOND};
+		} else if (level == 4) {
+			upgrades = new Item[] {ItemInit.BLOCKUPGRADE_IRON,ItemInit.BLOCKUPGRADE_GOLD,ItemInit.BLOCKUPGRADE_DIAMOND,ItemInit.BLOCKUPGRADE_EMERALD};
+		}
+		return upgrades;
+	}
 }

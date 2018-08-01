@@ -16,6 +16,6 @@ public class BlockInit {
 	
 	public static final Block CONDENSED_DIRT = new BlockBase("condensed_dirt", Material.ROCK,SoundType.STONE,1.0F,5.0F);
 	
-	public static final Block MATERIAL_FILTER = new BlockFilter("material_filter");
+	public static final Block MATERIAL_FILTER = new BlockFilter("material_filter",true,true);
 	public static final Block CONDENSER = new BlockCondenser("condenser");
 }

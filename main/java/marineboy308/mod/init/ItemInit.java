@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import marineboy308.mod.objects.items.ItemBase;
+import marineboy308.mod.objects.items.ItemBattery;
+import marineboy308.mod.objects.items.ItemFuel;
 import marineboy308.mod.objects.items.ItemUpgrade;
+import marineboy308.mod.objects.items.ItemWrench;
 import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.util.text.TextFormatting;
 
 public class ItemInit {
@@ -31,6 +35,12 @@ public class ItemInit {
 	public static final Item SHARD_DIAMOND = new ItemBase("shard_diamond");
 	public static final Item SHARD_EMERALD = new ItemBase("shard_emerald");
 	
+	public static final Item ENERGIZED_COAL = new ItemFuel("energized_coal",2000,2000,20);
+	public static final Item ENERGIZED_POWDER = new ItemFuel("energized_powder",5000,5000,100);
+	
+	public static final Item BATTERY = new ItemBattery("battery",10000,10000,10,false);
+	public static final Item BATTERY_CREATIVE = new ItemBattery("battery_creative",1000,1000,1000,true);
+	
 	public static final Item UPGRADE_SPEED_1 = new ItemUpgrade("upgrade_speed_1","Increases Machine Speed By 25%", TextFormatting.GREEN);
 	public static final Item UPGRADE_SPEED_2 = new ItemUpgrade("upgrade_speed_2","Increases Machine Speed By 50%", TextFormatting.GREEN);
 	public static final Item UPGRADE_SPEED_3 = new ItemUpgrade("upgrade_speed_3","Increases Machine Speed By 75%", TextFormatting.GREEN);
@@ -48,4 +58,6 @@ public class ItemInit {
 	public static final Item BLOCKUPGRADE_GOLD = new ItemUpgrade("blockupgrade_gold","Upgrade Machines From Iron To Gold", TextFormatting.AQUA);
 	public static final Item BLOCKUPGRADE_DIAMOND = new ItemUpgrade("blockupgrade_diamond","Upgrade Machines From Gold To Diamond", TextFormatting.AQUA);
 	public static final Item BLOCKUPGRADE_EMERALD = new ItemUpgrade("blockupgrade_emerald","Upgrade Machines From Diamond To Emerald", TextFormatting.AQUA);
+	
+	public static final Item WRENCH = new ItemWrench("wrench",ToolMaterial.IRON);
 }

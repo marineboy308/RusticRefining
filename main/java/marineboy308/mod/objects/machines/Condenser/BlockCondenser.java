@@ -39,6 +39,8 @@ public class BlockCondenser extends BlockContainer implements IHasModel {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool CONDENSING = PropertyBool.create("condensing");
 	public static final PropertyInteger LEVEL = PropertyInteger.create("level", 0, 4);
+	
+	public int level = 0;
 
 	public BlockCondenser(String name) {
 		
@@ -104,9 +106,12 @@ public class BlockCondenser extends BlockContainer implements IHasModel {
 		Item handitem = playerIn.getHeldItem(hand).getItem();
 		ItemStack handstack = playerIn.getHeldItem(hand);
 		
+		level = TileEntityBlockCondenser.getLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos));
+		
 		if (UpgradeHandler.isItemBlockUpgrade(handitem) && UpgradeHandler.canUpgradeBlock(handitem, TileEntityBlockCondenser.getLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos)))) {
 			handstack.shrink(1);
 			TileEntityBlockCondenser.updateLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos));
+			level = TileEntityBlockCondenser.getLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos));
 		} else {
 			if(!worldIn.isRemote) {
 				playerIn.openGui(Main.instance, Reference.GUI_CONDENSER, worldIn, pos.getX(), pos.getY(), pos.getZ());
@@ -121,11 +126,11 @@ public class BlockCondenser extends BlockContainer implements IHasModel {
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
         if (active) {
-            worldIn.setBlockState(pos, BlockInit.CONDENSER.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(CONDENSING, true), 3);
-            worldIn.setBlockState(pos, BlockInit.CONDENSER.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(CONDENSING, true), 3);
+            worldIn.setBlockState(pos, BlockInit.CONDENSER.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(CONDENSING, true).withProperty(LEVEL, TileEntityBlockCondenser.getLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos))), 3);
+            worldIn.setBlockState(pos, BlockInit.CONDENSER.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(CONDENSING, true).withProperty(LEVEL, TileEntityBlockCondenser.getLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos))), 3);
         } else {
-            worldIn.setBlockState(pos, BlockInit.CONDENSER.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(CONDENSING, false), 3);
-            worldIn.setBlockState(pos, BlockInit.CONDENSER.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(CONDENSING, false), 3);
+            worldIn.setBlockState(pos, BlockInit.CONDENSER.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(CONDENSING, false).withProperty(LEVEL, TileEntityBlockCondenser.getLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos))), 3);
+            worldIn.setBlockState(pos, BlockInit.CONDENSER.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(CONDENSING, false).withProperty(LEVEL, TileEntityBlockCondenser.getLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos))), 3);
         }
 
         if (tileentity != null) {
@@ -166,24 +171,28 @@ public class BlockCondenser extends BlockContainer implements IHasModel {
 
 	 @Override
 	 public IBlockState getStateFromMeta(int meta) {
-	 	return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(CONDENSING, Boolean.valueOf(isCondensing(meta)));
+	 	return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(CONDENSING, Boolean.valueOf(isCondensing(meta))).withProperty(LEVEL, Integer.valueOf(level));
 	 }
 
 	 @Override
 	 public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		 worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing()).withProperty(CONDENSING, Boolean.valueOf(false)), 2);
+		 worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing()).withProperty(CONDENSING, Boolean.valueOf(false)).withProperty(LEVEL, Integer.valueOf(0)), 2);
 	 }
 	 
 	 @Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		 TileEntityBlockCondenser tileentity = (TileEntityBlockCondenser)worldIn.getTileEntity(pos);
 		 InventoryHelper.dropInventoryItems(worldIn, pos, tileentity);
+		 Item[] upgrades = UpgradeHandler.dropUpgrades(TileEntityBlockCondenser.getLevel((TileEntityBlockCondenser)worldIn.getTileEntity(pos)));
+		 for (int i = 0; i < upgrades.length; i++) {
+			 InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(upgrades[i],1));
+		 }
 		 super.breakBlock(worldIn, pos, state);
 	}
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing()).withProperty(CONDENSING, Boolean.valueOf(false));
+		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing()).withProperty(CONDENSING, Boolean.valueOf(false)).withProperty(LEVEL, Integer.valueOf(0));
 	}
 
 	@Override

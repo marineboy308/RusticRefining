@@ -5,9 +5,9 @@ import java.util.Random;
 import marineboy308.mod.Main;
 import marineboy308.mod.init.BlockInit;
 import marineboy308.mod.init.ItemInit;
+import marineboy308.mod.objects.blocks.BlockContainerWrenchable;
 import marineboy308.mod.util.Reference;
 import marineboy308.mod.util.interfaces.IHasModel;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -26,21 +26,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockFilter extends BlockContainer implements IHasModel {
+public class BlockFilter extends BlockContainerWrenchable implements IHasModel {
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool FILTERING = PropertyBool.create("filtering");
+	private static boolean isFiltering = false;
 
-	public BlockFilter(String name) {
+	public BlockFilter(String name, boolean canRotate, boolean canPickup) {
 		
-		super(Material.IRON);
+		super(Material.IRON, canRotate, canPickup);
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(Main.rusticrefiningtab);
@@ -95,19 +96,85 @@ public class BlockFilter extends BlockContainer implements IHasModel {
         return true;
     }
 	
-	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	@SideOnly(Side.CLIENT)
+    @SuppressWarnings("incomplete-switch")
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
+    {
+        if (isFiltering)
+        {
+            EnumFacing enumfacing = (EnumFacing)stateIn.getValue(FACING);
+            double d0 = (double)pos.getX() + 0.5D;
+            double d1 = (double)pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
+            double d2 = (double)pos.getZ() + 0.5D;
+            double d3 = 0.52D;
+            double d4 = rand.nextDouble() * 0.4D - 0.2D;
 
+            switch (enumfacing)
+            {
+                case EAST:
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    break;
+                case WEST:
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    break;
+                case SOUTH:
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 - d3, 0.0D, 0.0D, 0.0D);
+                    break;
+                case NORTH:
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 + d3, 0.0D, 0.0D, 0.0D);
+            }
+        }
+    }
+	
+	@Override
+	public void setBlockStateForRotation(World worldIn, BlockPos pos, IBlockState state, EnumFacing facing) {
+		TileEntity tileentity = worldIn.getTileEntity(pos);
+		
+		EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+		
+		switch (enumfacing)
+        {
+            case NORTH:
+            	worldIn.setBlockState(pos, BlockInit.MATERIAL_FILTER.getDefaultState().withProperty(FACING, EnumFacing.EAST).withProperty(FILTERING, state.getValue(FILTERING)), 3);
+                break;
+            case EAST:
+            	worldIn.setBlockState(pos, BlockInit.MATERIAL_FILTER.getDefaultState().withProperty(FACING, EnumFacing.SOUTH).withProperty(FILTERING, state.getValue(FILTERING)), 3);
+                break;
+            case SOUTH:
+            	worldIn.setBlockState(pos, BlockInit.MATERIAL_FILTER.getDefaultState().withProperty(FACING, EnumFacing.WEST).withProperty(FILTERING, state.getValue(FILTERING)), 3);
+                break;
+            case WEST:
+            	worldIn.setBlockState(pos, BlockInit.MATERIAL_FILTER.getDefaultState().withProperty(FACING, EnumFacing.NORTH).withProperty(FILTERING, state.getValue(FILTERING)), 3);
+            	break;
+            default:
+            	break;
+        }
+		
+		 if (tileentity != null) {
+	        tileentity.validate();
+	        worldIn.setTileEntity(pos, tileentity);
+	     }
+	}
+	
+	@Override
+	public void dropItemsOnPickup(World worldIn, BlockPos pos, IBlockState state) {
+		TileEntityBlockFilter tileentity = (TileEntityBlockFilter)worldIn.getTileEntity(pos);
+		InventoryHelper.dropInventoryItems(worldIn, pos, tileentity);
+		super.dropItemsOnPickup(worldIn, pos, state);
+	}
+	
+	@Override
+	public void openGuiOnActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
 		if(!worldIn.isRemote) {
 			playerIn.openGui(Main.instance, Reference.GUI_MATERIAL_FILTER, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
-		
-		return true;
 	}
 	
 	public static void setState(boolean active, World worldIn, BlockPos pos) {
         IBlockState iblockstate = worldIn.getBlockState(pos);
         TileEntity tileentity = worldIn.getTileEntity(pos);
+        
+        isFiltering = active;
 
         if (active) {
             worldIn.setBlockState(pos, BlockInit.MATERIAL_FILTER.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(FILTERING, true), 3);

@@ -1,4 +1,4 @@
-package marineboy308.mod.recipes;
+	package marineboy308.mod.recipes;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 
 public class FilterRecipes {
 
-	private static final FilterRecipes FILTERING_BASE = new FilterRecipes();
+	private static final FilterRecipes BASE = new FilterRecipes();
     private final Map<ItemStack, ItemStack> filteringList = Maps.<ItemStack, ItemStack>newHashMap();
     private final Map<ItemStack, ItemStack> filteringChanceItemList = Maps.<ItemStack, ItemStack>newHashMap();
     private final Map<ItemStack, Float> filteringChanceList = Maps.<ItemStack, Float>newHashMap();
@@ -22,7 +22,7 @@ public class FilterRecipes {
 
     public static FilterRecipes instance()
     {
-        return FILTERING_BASE;
+        return BASE;
     }
 
     private FilterRecipes()

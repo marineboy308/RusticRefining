@@ -502,6 +502,7 @@ public class TileEntityBlockCondenser extends TileEntityLockable implements ITic
             case 3:
             	this.level = value;
         }
+        BlockCondenser.setState(this.isCondensing(), this.world, this.pos);
     }
 
     @Override

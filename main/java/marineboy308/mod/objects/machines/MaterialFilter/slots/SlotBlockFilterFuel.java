@@ -5,16 +5,16 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class SlotBlockFilterInput extends Slot {
+public class SlotBlockFilterFuel extends Slot {
 
-	public SlotBlockFilterInput(IInventory inventoryIn, int index, int xPosition, int yPosition) {
+	public SlotBlockFilterFuel(IInventory inventoryIn, int index, int xPosition, int yPosition) {
 		super(inventoryIn, index, xPosition, yPosition);
 	}
 
 	@Override
     public boolean isItemValid(ItemStack stack)
     {
-        return TileEntityBlockFilter.isItemBakeable(stack);
+        return TileEntityBlockFilter.isItemFuel(stack);
     }
 
 	@Override
