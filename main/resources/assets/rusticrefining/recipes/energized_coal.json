@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern": [
+		"CR"
+	],
+	
+	"key": {
+		"C": {
+			"item": "minecraft:coal"
+		},
+		"R": {
+			"item": "minecraft:redstone"
+		}
+	},
+	
+	"result": {
+		"item": "rusticrefining:energized_coal"
+	}
+}

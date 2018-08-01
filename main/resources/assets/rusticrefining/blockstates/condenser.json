@@ -1,14 +1,24 @@
 {
     "variants": {
-        "normal": {"model": "rusticrefining:condenser_off" },
-        "condensing=false,facing=east": {"model": "rusticrefining:condenser_off", "y": 270 },
-        "condensing=false,facing=west": {"model": "rusticrefining:condenser_off", "y": 90 },
-        "condensing=false,facing=south": {"model": "rusticrefining:condenser_off", "y": 0 },
-        "condensing=false,facing=north": {"model": "rusticrefining:condenser_off", "y": 180 },
+        "normal": {"model": "rusticrefining:condenser_off_L0" },
+        "condensing=false,facing=east,level=0": {"model": "rusticrefining:condenser_off_L0", "y": 270 },
+        "condensing=false,facing=west,level=0": {"model": "rusticrefining:condenser_off_L0", "y": 90 },
+        "condensing=false,facing=south,level=0": {"model": "rusticrefining:condenser_off_L0", "y": 0 },
+        "condensing=false,facing=north,level=0": {"model": "rusticrefining:condenser_off_L0", "y": 180 },
         
-        "condensing=true,facing=east": {"model": "rusticrefining:condenser_on", "y": 270 },
-        "condensing=true,facing=west": {"model": "rusticrefining:condenser_on", "y": 90 },
-        "condensing=true,facing=south": {"model": "rusticrefining:condenser_on", "y": 0 },
-        "condensing=true,facing=north": {"model": "rusticrefining:condenser_on", "y": 180 }
+        "condensing=true,facing=east,level=0": {"model": "rusticrefining:condenser_on_L0", "y": 270 },
+        "condensing=true,facing=west,level=0": {"model": "rusticrefining:condenser_on_L0", "y": 90 },
+        "condensing=true,facing=south,level=0": {"model": "rusticrefining:condenser_on_L0", "y": 0 },
+        "condensing=true,facing=north,level=0": {"model": "rusticrefining:condenser_on_L0", "y": 180 },
+        
+        "condensing=false,facing=east,level=1": {"model": "rusticrefining:condenser_off_L1", "y": 270 },
+        "condensing=false,facing=west,level=1": {"model": "rusticrefining:condenser_off_L1", "y": 90 },
+        "condensing=false,facing=south,level=1": {"model": "rusticrefining:condenser_off_L1", "y": 0 },
+        "condensing=false,facing=north,level=1": {"model": "rusticrefining:condenser_off_L1", "y": 180 },
+        
+        "condensing=true,facing=east,level=1": {"model": "rusticrefining:condenser_on_L1", "y": 270 },
+        "condensing=true,facing=west,level=1": {"model": "rusticrefining:condenser_on_L1", "y": 90 },
+        "condensing=true,facing=south,level=1": {"model": "rusticrefining:condenser_on_L1", "y": 0 },
+        "condensing=true,facing=north,level=1": {"model": "rusticrefining:condenser_on_L1", "y": 180 }
     }
 }

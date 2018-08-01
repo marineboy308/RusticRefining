@@ -2,11 +2,11 @@
 	"parent": "block/orientable",
 	"textures": {
 		"up": "rusticrefining:blocks/material_filter_top",
-		"down": "rusticrefining:blocks/machine_out",
+		"down": "rusticrefining:blocks/machine_bottom",
 		"north": "rusticrefining:blocks/material_filter_front_on",
 		"east": "rusticrefining:blocks/machine_side",
 		"south": "rusticrefining:blocks/machine_side",
-		"west": "rusticrefining:blocks/machine_in",
-		"particle": "minecraft:blocks/machine_side"
+		"west": "rusticrefining:blocks/machine_side",
+		"particle": "rusticrefining:blocks/machine_bottom"
 	}
 }

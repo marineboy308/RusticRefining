@@ -22,6 +22,12 @@ item.shard_gold.name=Gold Shards
 item.shard_diamond.name=Diamond Shards
 item.shard_emerald.name=Emerald Shards
 
+item.energized_coal.name=Energized Coal
+item.energized_powder.name=Energized Powder
+
+item.battery.name=Battery
+item.battery_creative.name=Creative Battery
+
 item.upgrade_speed_1.name=Speed Upgrade I
 item.upgrade_speed_2.name=Speed Upgrade II
 item.upgrade_speed_3.name=Speed Upgrade III
@@ -39,6 +45,8 @@ item.blockupgrade_iron.name=Iron Upgrade
 item.blockupgrade_gold.name=Gold Upgrade
 item.blockupgrade_diamond.name=Diamond Upgrade
 item.blockupgrade_emerald.name=Emerald Upgrade
+
+item.wrench.name=Wrench
 
 tile.material_filter.name=Material Filter
 tile.condenser.name=Condenser
