@@ -1,11 +1,8 @@
-package marineboy308.mod.objects.machines.MaterialFilter;
-
-import java.util.Random;
+package marineboy308.mod.objects.machines.BatteryCharger;
 
 import marineboy308.mod.init.ItemInit;
 import marineboy308.mod.objects.items.ItemBattery;
 import marineboy308.mod.objects.items.ItemFuel;
-import marineboy308.mod.recipes.FilterRecipes;
 import marineboy308.mod.util.factories.EnergyEventFactory;
 import marineboy308.mod.util.handlers.UpgradeHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,20 +27,20 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityBlockFilter extends TileEntityLockable implements ITickable, ISidedInventory {
+public class TileEntityBlockCharger extends TileEntityLockable implements ITickable, ISidedInventory {
 
-    private static final int[] OUTPUT_SLOTS = new int[] {1, 2};
+    private static final int[] OUTPUT_SLOTS = new int[] {};
     private static final int[] INPUT_SLOTS = new int[] {0};
     
-    private NonNullList<ItemStack> tileEntityItemStacks = NonNullList.<ItemStack>withSize(5, ItemStack.EMPTY);
+    private NonNullList<ItemStack> tileEntityItemStacks = NonNullList.<ItemStack>withSize(3, ItemStack.EMPTY);
     
-    private int bakingTime;
-    private int bakeTime;
-    private int totalBakeTime;
+    private int charging;
+    private int chargeWait;
+    private int totalChargeWait;
     private String customName;
     
     private int energy;
-    private int maxEnergy = 50000;
+    private int maxEnergy = 100000;
     private int drainWait;
 
     @Override
@@ -87,27 +84,18 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
     @Override
     public void setInventorySlotContents(int index, ItemStack stack)
     {
-        ItemStack itemstack = this.tileEntityItemStacks.get(index);
-        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         this.tileEntityItemStacks.set(index, stack);
 
         if (stack.getCount() > this.getInventoryStackLimit())
         {
             stack.setCount(this.getInventoryStackLimit());
         }
-
-        if (index == 0 && !flag)
-        {
-            this.totalBakeTime = this.getBakeTime();
-            this.bakeTime = 0;
-            this.markDirty();
-        }
     }
 
     @Override
     public String getName()
     {
-        return this.hasCustomName() ? this.customName : "container.material_filter";
+        return this.hasCustomName() ? this.customName : "container.charger_battery";
     }
 
     @Override
@@ -123,7 +111,7 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
 
     public static void registerFixes(DataFixer fixer)
     {
-        fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityBlockFilter.class, new String[] {"Items"}));
+        fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityBlockCharger.class, new String[] {"Items"}));
     }
 
     @Override
@@ -132,9 +120,9 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
         super.readFromNBT(compound);
         this.tileEntityItemStacks = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.tileEntityItemStacks);
-        this.bakingTime = compound.getInteger("FilteringTime");
-        this.bakeTime = compound.getInteger("FilterTime");
-        this.totalBakeTime = compound.getInteger("FilterTimeTotal");
+        this.charging = compound.getInteger("Charging");
+        this.chargeWait = compound.getInteger("ChargeWait");
+        this.totalChargeWait = compound.getInteger("TotalChargeWait");
         this.energy = compound.getInteger("Energy");
         
         if (compound.hasKey("CustomName", 8))
@@ -147,9 +135,9 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
-        compound.setInteger("FilteringTime", (short)this.bakingTime);
-        compound.setInteger("FilterTime", (short)this.bakeTime);
-        compound.setInteger("FilterTimeTotal", (short)this.totalBakeTime);
+        compound.setInteger("Charging", (short)this.charging);
+        compound.setInteger("ChargeWait", (short)this.chargeWait);
+        compound.setInteger("TotalChargeWait", (short)this.totalChargeWait);
         compound.setInteger("Energy", this.energy);
         ItemStackHelper.saveAllItems(compound, this.tileEntityItemStacks);
         
@@ -199,29 +187,29 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
         return 64;
     }
 
-    public boolean isBaking()
+    public boolean isCharging()
     {
-        return this.bakingTime > 0;
+        return this.charging == 1;
     }
 
     @SideOnly(Side.CLIENT)
-    public static boolean isBaking(IInventory inventory)
+    public static boolean isCharging(IInventory inventory)
     {
-        return inventory.getField(0) > 0;
+        return inventory.getField(0) == 1;
     }
 
     @Override
     public void update()
     {
-        boolean flag = this.isBaking();
+    	boolean flag = false;
         boolean flag1 = false;
-
-        if (this.isBaking()) {
-            --this.bakingTime;
+        
+        if (isCharging()) {
+        	flag = true;
         }
 
         if (!this.world.isRemote) {
-        	ItemStack fuel = this.tileEntityItemStacks.get(4);
+        	ItemStack fuel = this.tileEntityItemStacks.get(2);
         	
         	this.energy = MathHelper.clamp(this.energy, 0, this.maxEnergy);
             
@@ -242,7 +230,7 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
     		        		}
     		        	}
             		}
-            	} else if (isItemFuel(fuel) && fuel.getItem() instanceof ItemBattery) {
+            	} else if (isItemBattery(fuel)) {
             		int storedEnergy = getItemEnergyStored(fuel);
             		if (storedEnergy < 0) {
             			storedEnergy = 0;
@@ -259,49 +247,54 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
             			}
             		}
             	} else {
-            		drainWait = 0;
+            		this.drainWait = 0;
             	}
             } else {
-            	drainWait = 0;
+            	this.drainWait = 0;
             }
-        	
-            ItemStack itemstack = this.tileEntityItemStacks.get(0);
-
-            if (this.isBaking() || !itemstack.isEmpty()) {
-                if (!this.isBaking() && this.canBake()) {
-                    this.bakingTime = this.getBakeTime();
-
-                    if (this.isBaking()) {
-                        flag1 = true;
-                    }
-                }
-
-                if (this.isBaking() && this.canBake())
-                {
-                    ++this.bakeTime;
-
-                    if (this.bakeTime == this.totalBakeTime)
-                    {
-                        this.bakeTime = 0;
-                        this.totalBakeTime = this.getBakeTime();
-                        this.bakeItem();
-                        flag1 = true;
-                    }	
-                }
-                else
-                {
-                    this.bakeTime = 0;
-                }
+            
+            ItemStack battery = this.tileEntityItemStacks.get(0);
+            
+            if (!battery.isEmpty()) {
+	            if (isItemBattery(battery)) {
+	            	if (isCharging()) {
+	            		if (this.energy - 10 >= 0 && ((ItemBattery)battery.getItem()).getItemEnergy(battery) + 10 <= ((ItemBattery)battery.getItem()).getItemMaxEnergy(battery)) {
+	            			--this.chargeWait;
+	            			if (this.chargeWait == 0) {
+	            				this.energy = this.energy - 10;
+	            				((ItemBattery)battery.getItem()).setItemEnergy(battery,((ItemBattery)battery.getItem()).getItemEnergy(battery) + 10);
+	            				flag1 = true;
+	            				this.chargeWait = getBakeTime();
+	            				this.totalChargeWait = this.chargeWait;
+	            				this.charging = 1;
+	            			}
+	            		} else {
+	            			this.chargeWait = 0;
+	            			this.charging = 0;
+	            		}
+	            	} else {
+	            		if (this.energy - 10 >= 0 && ((ItemBattery)battery.getItem()).getItemEnergy(battery) + 10 <= ((ItemBattery)battery.getItem()).getItemMaxEnergy(battery)) {
+	            			this.chargeWait = getBakeTime();
+	            			this.totalChargeWait = this.chargeWait;
+            				this.charging = 1;
+	            		} else {
+	            			this.chargeWait = 0;
+	            			this.charging = 0;
+	            		}
+	            	}
+	            } else {
+	            	this.chargeWait = 0;
+	            	this.charging = 0;
+	            }
+            } else {
+            	this.chargeWait = 0;
+            	this.charging = 0;
             }
-            else if (!this.isBaking() && this.bakeTime > 0)
-            {
-                this.bakeTime = MathHelper.clamp(this.bakeTime - 2, 0, this.totalBakeTime);
-            }
-
-            if (flag != this.isBaking())
+            
+            if (flag != this.isCharging())
             {
                 flag1 = true;
-                BlockFilter.setState(this.isBaking(), this.world, this.pos);
+                BlockCharger.setState(this.isCharging(), this.world, this.pos);
             }
         }
 
@@ -313,8 +306,8 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
 
     public int getBakeTime()
     {
-    	int time = 200;
-    	Item item = this.tileEntityItemStacks.get(3).getItem();
+    	int time = 20;
+    	Item item = this.tileEntityItemStacks.get(1).getItem();
     	if(UpgradeHandler.isItemUpgrade(item)) {
     		if(item == ItemInit.UPGRADE_SPEED_1) {
         		return (int)((float)time * 0.75);
@@ -327,122 +320,6 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
         	}
     	}
         return time;
-    }
-    
-    public int getEnergyNeeded() {
-    	return 1000;
-    }
-    
-    public int upgradeOutput(int amount) {
-    	Item item = this.tileEntityItemStacks.get(3).getItem();
-    	if(UpgradeHandler.isItemUpgrade(item)) {
-    		if(item == ItemInit.UPGRADE_DOUBLE_1) {
-        		return amount + (int)((float)amount * 0.3);
-        	} else if(item == ItemInit.UPGRADE_DOUBLE_2) {
-        		return amount + (int)((float)amount * 0.6);
-        	} else if(item == ItemInit.UPGRADE_DOUBLE_3) {
-        		return amount + (int)((float)amount * 0.9);
-        	} else {
-        		return amount;
-        	}
-    	}
-    	return amount;
-    }
-
-    private boolean canBake() {
-    	if (this.energy < getEnergyNeeded()) return false;
-        if (((ItemStack)this.tileEntityItemStacks.get(0)).isEmpty()) {
-            return false;
-        } else {
-            ItemStack result = FilterRecipes.instance().getFilteringResult(this.tileEntityItemStacks.get(0));
-            ItemStack chanceitem = FilterRecipes.instance().getFilteringChanceItemResult(this.tileEntityItemStacks.get(0));
-
-            if (result.isEmpty()) {
-                return false;
-            } else {
-                ItemStack output1 = this.tileEntityItemStacks.get(1); /* Output For Result 1 */
-                ItemStack output2 = this.tileEntityItemStacks.get(2); /* Output For Result 2 [Chance Item] */
-                
-                if (!output1.isEmpty() && output1.getItem() != result.getItem() || !output2.isEmpty() && output2.getItem() != chanceitem.getItem()) {
-                	return false;
-            	} else if ((output1.isEmpty() && output2.isEmpty()) || (output1.isEmpty() && output2.isItemEqual(chanceitem)) || (output1.isItemEqual(result) && output2.isEmpty())) {
-                    return true;
-                } else if (output1.getCount() + result.getCount() <= this.getInventoryStackLimit() && output1.getCount() + result.getCount() <= output1.getMaxStackSize() && output2.getCount() + result.getCount() <= this.getInventoryStackLimit() && output2.getCount() + result.getCount() <= output2.getMaxStackSize()) {       
-                    return true;
-                } else {
-                    return output1.getCount() + result.getCount() <= result.getMaxStackSize() && output2.getCount() + result.getCount() <= result.getMaxStackSize();
-                }
-            }
-        }
-    }
-
-    public void bakeItem() {
-        if (this.canBake()) {
-            ItemStack input = this.tileEntityItemStacks.get(0);
-            ItemStack output1 = this.tileEntityItemStacks.get(1);
-            ItemStack output2 = this.tileEntityItemStacks.get(2);
-            ItemStack result1 = FilterRecipes.instance().getFilteringResult(this.tileEntityItemStacks.get(0));
-            ItemStack result2 = FilterRecipes.instance().getFilteringChanceItemResult(this.tileEntityItemStacks.get(0));
-            
-            ItemStack result = result1.copy();
-            
-            float chance = FilterRecipes.instance().getFilteringChanceResult(this.tileEntityItemStacks.get(0));
-            
-            Item item = this.tileEntityItemStacks.get(3).getItem();
-            
-            if(UpgradeHandler.isItemUpgrade(item)) {
-            	if(item == ItemInit.UPGRADE_CHANCE_1) {
-            		chance = chance + (chance * 0.1F);
-            	} else if(item == ItemInit.UPGRADE_CHANCE_2) {
-            		chance = chance + (chance * 0.2F);
-            	} else if(item == ItemInit.UPGRADE_CHANCE_3) {
-            		chance = chance + (chance * 0.4F);
-            	} else if(item == ItemInit.UPGRADE_CHANCE_4) {
-            		chance = chance + (chance * 0.8F);
-            	}
-            }
-            
-            if (chance > 1.0F) {
-            	chance = 1.0F;
-            } else if (chance < 0.0F) {
-            	chance = 0.0F;
-            }
-            
-            Random rand = new Random();
-            
-            float chancevalue = rand.nextFloat();
-            int resultamount = rand.nextInt(upgradeOutput(result.getCount()+1));
-            
-            if(resultamount == 0) {
-            	resultamount = 1;
-            }
-            
-            result.setCount(resultamount);
-            
-            if (chancevalue < chance ? output1.getCount() + result.getCount() <= this.getInventoryStackLimit() && 
-            		output1.getCount() + result.getCount() <= output1.getMaxStackSize() && 
-            		output2.getCount() + result2.getCount() <= this.getInventoryStackLimit() && 
-            		output2.getCount() + result2.getCount() <= output2.getMaxStackSize() : 
-            		output1.getCount() + result.getCount() <= this.getInventoryStackLimit() && 
-            		output1.getCount() + result.getCount() <= output1.getMaxStackSize()) {
-            	
-            	if (output1.isEmpty()) {
-	                this.tileEntityItemStacks.set(1, result.copy());
-	            } else if (output1.getItem() == result.getItem()) {
-	            	output1.grow(result.getCount());
-	            }
-	
-	            if (chancevalue < chance) {
-	            	if (output2.isEmpty()) {
-	            		this.tileEntityItemStacks.set(2, result2.copy());
-	            	} else if (output2.getItem() == result2.getItem()) {
-	            		output2.grow(result2.getCount());
-	            	}
-	            }
-	            input.shrink(1);
-	            this.energy = this.energy - getEnergyNeeded();
-            }
-        }
     }
     
     public static int getItemEnergyStored(ItemStack stack) {
@@ -458,6 +335,11 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
     public static boolean isItemFuel(ItemStack stack)
     {
         return getItemEnergyStored(stack) > 0;
+    }
+    
+    public static boolean isItemBattery(ItemStack stack)
+    {
+        return stack.getItem() instanceof ItemBattery;
     }
 
     @Override
@@ -482,31 +364,14 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
     public void closeInventory(EntityPlayer player)
     {
     }
-    
-    public boolean isItemBakeable() {
-    	ItemStack result = FilterRecipes.instance().getFilteringResult(this.tileEntityItemStacks.get(0));
-    	if (!result.isEmpty()) {
-    		return true;
-    	}
-    	return false;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public static boolean isItemBakeable(ItemStack stack) {
-    	ItemStack result = FilterRecipes.instance().getFilteringResult(stack);
-    	if (!result.isEmpty()) {
-    		return true;
-    	}
-    	return false;
-    }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack)
     {
-        if (index != 0 && index != 4) {
+        if (index != 0) {
             return false;
         } else {
-            return isItemBakeable(stack);
+            return isItemBattery(stack);
         }
     }
 
@@ -529,7 +394,7 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
     @Override
     public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
     {
-        if (direction == EnumFacing.DOWN && (index != 0 && index != 4 && index != 5))
+        if (direction == EnumFacing.DOWN && (index != 1 && index != 2))
         {
             return true;
         }
@@ -540,13 +405,13 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
     @Override
     public String getGuiID()
     {
-        return "rusticrefining:material_filter";
+        return "rusticrefining:charger_battery";
     }
 
     @Override
     public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
     {
-        return new ContainerBlockFilter(playerInventory, this);
+        return new ContainerBlockCharger(playerInventory, this);
     }
 
     @Override
@@ -555,11 +420,11 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
         switch (id)
         {
             case 0:
-                return this.bakingTime;
+                return this.charging;
             case 1:
-                return this.bakeTime;
+            	return this.chargeWait;
             case 2:
-                return this.totalBakeTime;
+            	return this.totalChargeWait;
             case 3:
             	return this.energy;
             case 4:
@@ -575,13 +440,14 @@ public class TileEntityBlockFilter extends TileEntityLockable implements ITickab
         switch (id)
         {
             case 0:
-                this.bakingTime = value;
+                this.charging = value;
                 break;
             case 1:
-                this.bakeTime = value;
+                this.chargeWait = value;
                 break;
             case 2:
-                this.totalBakeTime = value;
+                this.totalChargeWait = value;
+
             case 3:
                 this.energy = value;
                 break;

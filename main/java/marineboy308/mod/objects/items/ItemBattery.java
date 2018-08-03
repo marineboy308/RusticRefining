@@ -51,6 +51,11 @@ public class ItemBattery extends ItemEnergy implements IHasModel {
 	}
 	
 	@Override
+	public int getItemMaxEnergy(ItemStack itemStack) {
+		return this.maxEnergy;
+	}
+	
+	@Override
 	public void setItemEnergy(ItemStack itemStack, int energy) {
 			NBTTagCompound nbt;
 			if (itemStack.hasTagCompound()) {

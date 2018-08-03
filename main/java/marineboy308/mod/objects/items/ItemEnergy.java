@@ -14,6 +14,14 @@ public class ItemEnergy extends Item {
     }
     
     /**
+     * @return the max energy that can be stored for this itemStack.
+     */
+    public int getItemMaxEnergy(ItemStack itemStack)
+    {
+        return -1;
+    }
+    
+    /**
      * set energy of the Item
      */
     public void setItemEnergy(ItemStack itemStack, int energy)

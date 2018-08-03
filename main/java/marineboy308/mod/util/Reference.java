@@ -9,5 +9,6 @@ public class Reference {
 	public static final String COMMON = "marineboy308.mod.proxy.CommonProxy";
 	
 	public static final int GUI_MATERIAL_FILTER = 0;
-	public static final int GUI_CONDENSER = 1;
+	public static final int GUI_CHARGER_BATTERY = 1;
+	public static final int GUI_CELL_BATTERY = 2;
 }

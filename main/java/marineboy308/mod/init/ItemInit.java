@@ -54,10 +54,5 @@ public class ItemInit {
 	public static final Item UPGRADE_CHANCE_3 = new ItemUpgrade("upgrade_chance_3","Increases Machine Secondary Output Chance By 40%", TextFormatting.GREEN);
 	public static final Item UPGRADE_CHANCE_4 = new ItemUpgrade("upgrade_chance_4","Increases Machine Secondary Output Chance By 80%", TextFormatting.GREEN);
 	
-	public static final Item BLOCKUPGRADE_IRON = new ItemUpgrade("blockupgrade_iron","Upgrade Machines To Iron", TextFormatting.AQUA);
-	public static final Item BLOCKUPGRADE_GOLD = new ItemUpgrade("blockupgrade_gold","Upgrade Machines From Iron To Gold", TextFormatting.AQUA);
-	public static final Item BLOCKUPGRADE_DIAMOND = new ItemUpgrade("blockupgrade_diamond","Upgrade Machines From Gold To Diamond", TextFormatting.AQUA);
-	public static final Item BLOCKUPGRADE_EMERALD = new ItemUpgrade("blockupgrade_emerald","Upgrade Machines From Diamond To Emerald", TextFormatting.AQUA);
-	
 	public static final Item WRENCH = new ItemWrench("wrench",ToolMaterial.IRON);
 }
