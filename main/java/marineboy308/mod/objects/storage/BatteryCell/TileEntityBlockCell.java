@@ -1,7 +1,5 @@
 package marineboy308.mod.objects.storage.BatteryCell;
 
-import java.util.Arrays;
-
 import marineboy308.mod.objects.items.ItemBattery;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -27,8 +25,18 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
     
     private NonNullList<ItemStack> tileEntityItemStacks = NonNullList.<ItemStack>withSize(6, ItemStack.EMPTY);
     
-    private int[] batteryCharges = new int[] {0,0,0,0,0,0};
-    private int[] batteryMaxCharges = new int[] {0,0,0,0,0,0};
+    private int batteryCharge0;
+    private int batteryMaxCharge0;
+    private int batteryCharge1;
+    private int batteryMaxCharge1;
+    private int batteryCharge2;
+    private int batteryMaxCharge2;
+    private int batteryCharge3;
+    private int batteryMaxCharge3;
+    private int batteryCharge4;
+    private int batteryMaxCharge4;
+    private int batteryCharge5;
+    private int batteryMaxCharge5;
     private String customName;
 
     @Override
@@ -108,8 +116,6 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
         super.readFromNBT(compound);
         this.tileEntityItemStacks = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.tileEntityItemStacks);
-        this.batteryCharges = compound.getIntArray("Charges");
-        this.batteryMaxCharges = compound.getIntArray("MaxCharges");
         
         if (compound.hasKey("CustomName", 8))
         {
@@ -121,8 +127,6 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
-        compound.setIntArray("Charges", this.batteryCharges);
-        compound.setIntArray("MaxCharges", this.batteryMaxCharges);
         ItemStackHelper.saveAllItems(compound, this.tileEntityItemStacks);
         
         if (this.hasCustomName())
@@ -186,73 +190,73 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
         	
         	if (!b0.isEmpty()) {
 	        	if (b0.getItem() instanceof ItemBattery) {
-	        		Arrays.fill(this.batteryCharges, 0, 0, ((ItemBattery)b0.getItem()).getItemEnergy(b0));
-	        		Arrays.fill(this.batteryMaxCharges, 0, 0, ((ItemBattery)b0.getItem()).getItemMaxEnergy(b0));
+	        		this.batteryCharge0 = ((ItemBattery)b0.getItem()).getItemEnergy(b0);
+	        		this.batteryMaxCharge0 = ((ItemBattery)b0.getItem()).getItemMaxEnergy(b0);
 	        		flag = true;
 	        	}
         	} else {
-        		Arrays.fill(this.batteryCharges, 0, 0, 0);
-        		Arrays.fill(this.batteryMaxCharges, 0, 0, 0);
+        		this.batteryCharge0 = 0;
+        		this.batteryMaxCharge0 = 0;
         		flag = true;
         	}
         	
         	if (!b1.isEmpty()) {
 	        	if (b1.getItem() instanceof ItemBattery) {
-	        		Arrays.fill(this.batteryCharges, 1, 1, ((ItemBattery)b1.getItem()).getItemEnergy(b1));
-	        		Arrays.fill(this.batteryMaxCharges, 1, 1, ((ItemBattery)b1.getItem()).getItemMaxEnergy(b1));
+	        		this.batteryCharge1 = ((ItemBattery)b1.getItem()).getItemEnergy(b1);
+	        		this.batteryMaxCharge1 = ((ItemBattery)b1.getItem()).getItemMaxEnergy(b1);
 	        		flag = true;
 	        	}
         	} else {
-        		Arrays.fill(this.batteryCharges, 1, 1, 0);
-        		Arrays.fill(this.batteryMaxCharges, 1, 1, 0);;
+        		this.batteryCharge1 = 0;
+        		this.batteryMaxCharge1 = 0;
         		flag = true;
         	}
         	
         	if (!b2.isEmpty()) {
 	        	if (b2.getItem() instanceof ItemBattery) {
-	        		Arrays.fill(this.batteryCharges, 2, 2, ((ItemBattery)b2.getItem()).getItemEnergy(b2));
-	        		Arrays.fill(this.batteryMaxCharges, 2, 2, ((ItemBattery)b2.getItem()).getItemMaxEnergy(b2));
+	        		this.batteryCharge2 = ((ItemBattery)b2.getItem()).getItemEnergy(b2);
+	        		this.batteryMaxCharge2 = ((ItemBattery)b2.getItem()).getItemMaxEnergy(b2);
 	        		flag = true;
 	        	}
         	} else {
-        		Arrays.fill(this.batteryCharges, 2, 2, 0);
-        		Arrays.fill(this.batteryMaxCharges, 2, 2, 0);
+        		this.batteryCharge2 = 0;
+        		this.batteryMaxCharge2 = 0;
         		flag = true;
         	}
         	
         	if (!b3.isEmpty()) {
 	        	if (b3.getItem() instanceof ItemBattery) {
-	        		Arrays.fill(this.batteryCharges, 3, 3, ((ItemBattery)b3.getItem()).getItemEnergy(b3));
-	        		Arrays.fill(this.batteryMaxCharges, 3, 3, ((ItemBattery)b3.getItem()).getItemMaxEnergy(b3));
+	        		this.batteryCharge3 = ((ItemBattery)b3.getItem()).getItemEnergy(b3);
+	        		this.batteryMaxCharge3 = ((ItemBattery)b3.getItem()).getItemMaxEnergy(b3);
 	        		flag = true;
 	        	}
         	} else {
-        		Arrays.fill(this.batteryCharges, 3, 3, 0);
-        		Arrays.fill(this.batteryMaxCharges, 3, 3, 0);
+        		this.batteryCharge3 = 0;
+        		this.batteryMaxCharge3 = 0;
         		flag = true;
         	}
         	
         	if (!b4.isEmpty()) {
 	        	if (b4.getItem() instanceof ItemBattery) {
-	        		Arrays.fill(this.batteryCharges, 4, 4, ((ItemBattery)b4.getItem()).getItemEnergy(b4));
-	        		Arrays.fill(this.batteryMaxCharges, 4, 4, ((ItemBattery)b4.getItem()).getItemMaxEnergy(b4));
+	        		this.batteryCharge4 = ((ItemBattery)b4.getItem()).getItemEnergy(b4);
+	        		this.batteryMaxCharge4 = ((ItemBattery)b4.getItem()).getItemMaxEnergy(b4);
 	        		flag = true;
 	        	}
         	} else {
-        		Arrays.fill(this.batteryCharges, 4, 4, 0);
-        		Arrays.fill(this.batteryMaxCharges, 4, 4, 0);
+        		this.batteryCharge4 = 0;
+        		this.batteryMaxCharge4 = 0;
         		flag = true;
         	}
         	
         	if (!b5.isEmpty()) {
 	        	if (b5.getItem() instanceof ItemBattery) {
-	        		Arrays.fill(this.batteryCharges, 5, 5, ((ItemBattery)b5.getItem()).getItemEnergy(b5));
-	        		Arrays.fill(this.batteryMaxCharges, 5, 5, ((ItemBattery)b5.getItem()).getItemMaxEnergy(b5));
+	        		this.batteryCharge5 = ((ItemBattery)b5.getItem()).getItemEnergy(b5);
+	        		this.batteryMaxCharge5 = ((ItemBattery)b5.getItem()).getItemMaxEnergy(b5);
 	        		flag = true;
 	        	}
         	} else {
-        		Arrays.fill(this.batteryCharges, 5, 5, 0);
-        		Arrays.fill(this.batteryMaxCharges, 5, 5, 0);
+        		this.batteryCharge5 = 0;
+        		this.batteryMaxCharge5 = 0;
         		flag = true;
         	}
         }
@@ -336,29 +340,29 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
         switch (id)
         {
             case 0:
-                return this.batteryCharges[0];
+                return this.batteryCharge0;
             case 1:
-            	return this.batteryMaxCharges[0];
+            	return this.batteryMaxCharge0;
             case 2:
-                return this.batteryCharges[1];
+                return this.batteryCharge1;
             case 3:
-            	return this.batteryMaxCharges[1];
+            	return this.batteryMaxCharge1;
             case 4:
-                return this.batteryCharges[2];
+                return this.batteryCharge2;
             case 5:
-            	return this.batteryMaxCharges[2];
+            	return this.batteryMaxCharge2;
             case 6:
-                return this.batteryCharges[3];
+                return this.batteryCharge3;
             case 7:
-            	return this.batteryMaxCharges[3];
+            	return this.batteryMaxCharge3;
             case 8:
-                return this.batteryCharges[4];
+                return this.batteryCharge4;
             case 9:
-            	return this.batteryMaxCharges[4];
+            	return this.batteryMaxCharge4;
             case 10:
-                return this.batteryCharges[5];
+                return this.batteryCharge5;
             case 11:
-            	return this.batteryMaxCharges[5];
+            	return this.batteryMaxCharge5;
             default:
                 return 0;
         }
@@ -370,40 +374,40 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
         switch (id)
         {
             case 0:
-                this.batteryCharges[0] = value;
+                this.batteryCharge0 = value;
                 break;
             case 1:
-                this.batteryMaxCharges[0] = value;
+                this.batteryMaxCharge0 = value;
                 break;
             case 2:
-                this.batteryCharges[1] = value;
+                this.batteryCharge1 = value;
                 break;
             case 3:
-                this.batteryMaxCharges[1] = value;
+                this.batteryMaxCharge1 = value;
                 break;
             case 4:
-                this.batteryCharges[2] = value;
+                this.batteryCharge2 = value;
                 break;
             case 5:
-                this.batteryMaxCharges[2] = value;
+                this.batteryMaxCharge2 = value;
                 break;
             case 6:
-                this.batteryCharges[3] = value;
+                this.batteryCharge3 = value;
                 break;
             case 7:
-                this.batteryMaxCharges[3] = value;
+                this.batteryMaxCharge3 = value;
                 break;
             case 8:
-                this.batteryCharges[4] = value;
+                this.batteryCharge4 = value;
                 break;
             case 9:
-                this.batteryMaxCharges[4] = value;
+                this.batteryMaxCharge4 = value;
                 break;
             case 10:
-                this.batteryCharges[5] = value;
+                this.batteryCharge5 = value;
                 break;
             case 11:
-                this.batteryMaxCharges[5] = value;
+                this.batteryMaxCharge5 = value;
                 break;
         }
     }
@@ -411,7 +415,7 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
     @Override
     public int getFieldCount()
     {
-        return 12;
+        return 0;//12;
     }
 
     @Override
