@@ -2,14 +2,14 @@ package marineboy308.mod.objects.items;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import marineboy308.mod.Main;
 import marineboy308.mod.init.ItemInit;
 import marineboy308.mod.objects.blocks.BlockContainerWrenchable;
 import marineboy308.mod.objects.blocks.BlockWrenchable;
 import marineboy308.mod.util.interfaces.IHasModel;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.SoundType;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +19,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -47,11 +46,15 @@ public class ItemWrench extends Item implements IHasModel {
 		return 1;
 	}
 	
+	public static void placeBlockInWorld(@Nonnull ItemStack itemstack, @Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ, @Nonnull EnumHand hand) {
+		
+	}
+	
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		ItemStack handitem = player.getHeldItem(hand);
 		
-		/*
+		/**
 		 * 0: Rotate
 		 * 1: Pickup
 		 * 2: Place
@@ -99,27 +102,15 @@ public class ItemWrench extends Item implements IHasModel {
 								if (Block.getBlockFromItem(item) != null) {
 									Block block = Block.getBlockFromItem(item);
 									if ((block instanceof BlockWrenchable ? (BlockWrenchable)block : null) != null) {
-										if (((BlockWrenchable)block).canRotateBlock(worldIn, pos)) {
-											worldIn.setBlockState(pos, block.getDefaultState().withProperty(BlockHorizontal.FACING, player.getHorizontalFacing()));
-										} else {
-											worldIn.setBlockState(pos, block.getDefaultState());
+										if (((BlockWrenchable)block).canPlaceBlock(worldIn, pos)) {
+											if (!worldIn.isRemote) placeBlockInWorld(stack, player, worldIn, pos, facing, hitX, hitY, hitZ, hand);
+											break;
 										}
-										if (!player.isCreative()) {
-											player.inventory.removeStackFromSlot(i);
-										}
-										SoundType soundtype = block.getSoundType(worldIn.getBlockState(pos), worldIn, pos, player);
-						                worldIn.playSound(pos.getX(), pos.getY(), pos.getZ(), soundtype.getHitSound(), SoundCategory.BLOCKS, soundtype.getVolume(), soundtype.getPitch(), false);
 									} else if ((block instanceof BlockContainerWrenchable ? (BlockContainerWrenchable)block : null) != null) {
-										if (((BlockContainerWrenchable)block).canRotateBlock(worldIn, pos)) {
-											worldIn.setBlockState(pos, block.getDefaultState().withProperty(BlockHorizontal.FACING, player.getHorizontalFacing()));
-										} else {
-											worldIn.setBlockState(pos, block.getDefaultState());
+										if (((BlockContainerWrenchable)block).canPlaceBlock(worldIn, pos)) {
+											if (!worldIn.isRemote) placeBlockInWorld(stack, player, worldIn, pos, facing, hitX, hitY, hitZ, hand);
+											break;
 										}
-										if (!player.isCreative()) {
-											player.inventory.removeStackFromSlot(i);
-										}
-										SoundType soundtype = block.getSoundType(worldIn.getBlockState(pos), worldIn, pos, player);
-						                worldIn.playSound(pos.getX(), pos.getY(), pos.getZ(), soundtype.getHitSound(), SoundCategory.BLOCKS, soundtype.getVolume(), soundtype.getPitch(), false);
 									}
 								}
 							}

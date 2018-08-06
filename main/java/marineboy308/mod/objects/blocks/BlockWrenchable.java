@@ -19,11 +19,13 @@ public class BlockWrenchable extends Block {
 
 	protected boolean canRotate;
 	protected boolean canPickup;
+	protected boolean canPlace;
 	
-	public BlockWrenchable(Material materialIn, boolean canRotate, boolean canPickup) {
+	public BlockWrenchable(Material materialIn, boolean canRotate, boolean canPickup, boolean canPlace) {
 		super(materialIn);
 		this.canRotate = canRotate;
 		this.canPickup = canPickup;
+		this.canPlace = canPlace;
 	}
 	
 	/**
@@ -45,6 +47,24 @@ public class BlockWrenchable extends Block {
      */
 	public boolean canPickupBlock(World worldIn, BlockPos pos) {
 		return this.canPickup;
+	}
+	
+	/**
+     * @return whether the block can be placed.
+     */
+	public boolean canPlaceBlock(World worldIn, BlockPos pos) {
+		return this.canPlace;
+	}
+	
+	/**
+     * Called serverside when this block is picked up, but before the Tile Entity is updated
+     */
+	public void pickupBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
+		Block block = worldIn.getBlockState(pos).getBlock();
+		if (!worldIn.isRemote) {
+			worldIn.setBlockToAir(pos);
+			if (!playerIn.isCreative()) InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(block,1));
+		}
 	}
 
 	/**
@@ -78,11 +98,7 @@ public class BlockWrenchable extends Block {
 				return false;
 			} else if (nbt.getInteger("Mode") == 1) {
 				if (((BlockWrenchable)worldIn.getBlockState(pos).getBlock()).canPickupBlock(worldIn, pos)) {
-					Block block = worldIn.getBlockState(pos).getBlock();
-					if (!worldIn.isRemote) {
-						worldIn.setBlockToAir(pos);
-						if (!playerIn.isCreative()) InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(block,1));
-					}
+					pickupBlock(worldIn, pos, state, playerIn);
 					return true;
 				}
 				return false;

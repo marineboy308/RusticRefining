@@ -10,6 +10,9 @@ public class OreDictionaryCompatibility {
 		OreDictionary.registerOre("materialTinyGravel", ItemInit.PEBBLE);
 		OreDictionary.registerOre("materialTinySand", ItemInit.PILE_SAND);
 		
+		OreDictionary.registerOre("ingotCopper", ItemInit.INGOT_COPPER);
+		OreDictionary.registerOre("ingotMagnesium", ItemInit.INGOT_MAGNESIUM);
+		
 		OreDictionary.registerOre("dustIron", ItemInit.DUST_IRON);
 		OreDictionary.registerOre("dustGold", ItemInit.DUST_GOLD);
 		OreDictionary.registerOre("dustDiamond", ItemInit.DUST_DIAMOND);

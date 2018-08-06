@@ -36,9 +36,9 @@ public class BlockCharger extends BlockContainerWrenchable implements IHasModel 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool CHARGING = PropertyBool.create("charging");
 
-	public BlockCharger(String name, boolean canRotate, boolean canPickup) {
+	public BlockCharger(String name, boolean canRotate, boolean canPickup, boolean canPlace) {
 		
-		super(Material.IRON, canRotate, canPickup);
+		super(Material.IRON, canRotate, canPickup, canPlace);
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(Main.rusticrefiningtab);

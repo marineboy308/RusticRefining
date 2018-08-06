@@ -38,9 +38,9 @@ public class BlockFilter extends BlockContainerWrenchable implements IHasModel {
 	public static final PropertyBool FILTERING = PropertyBool.create("filtering");
 	private static boolean isFiltering = false;
 
-	public BlockFilter(String name, boolean canRotate, boolean canPickup) {
+	public BlockFilter(String name, boolean canRotate, boolean canPickup, boolean canPlace) {
 		
-		super(Material.IRON, canRotate, canPickup);
+		super(Material.IRON, canRotate, canPickup, canPlace);
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(Main.rusticrefiningtab);

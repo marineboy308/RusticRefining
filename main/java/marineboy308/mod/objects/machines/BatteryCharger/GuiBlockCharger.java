@@ -3,6 +3,7 @@ package marineboy308.mod.objects.machines.BatteryCharger;
 import java.util.Arrays;
 
 import marineboy308.mod.util.Reference;
+import marineboy308.mod.util.handlers.EnergyHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -47,7 +48,7 @@ public class GuiBlockCharger extends GuiContainer {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
-        if (this.isPointInRegion(152, 8, 16, 48, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(this.tileentity.getField(3) + "/" + this.tileentity.getField(4) + "RE"), mouseX, mouseY,this.mc.fontRenderer);
+        if (this.isPointInRegion(152, 8, 16, 48, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(EnergyHandler.getEnergyForDisplay(this.tileentity.getField(3), this.tileentity.getField(4))), mouseX, mouseY,this.mc.fontRenderer);
     }
 	
 	protected boolean isPointInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY)

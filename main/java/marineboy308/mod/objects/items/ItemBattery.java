@@ -4,6 +4,7 @@ import java.util.List;
 
 import marineboy308.mod.Main;
 import marineboy308.mod.init.ItemInit;
+import marineboy308.mod.util.handlers.EnergyHandler;
 import marineboy308.mod.util.interfaces.IHasModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -74,6 +75,7 @@ public class ItemBattery extends ItemEnergy implements IHasModel {
 				if (!this.iscreative) nbt.setInteger("Energy", energy);
 				else nbt.setInteger("Energy", this.energy);
 			}
+			if (energy == 0) itemStack.setStackDisplayName("Empty Battery");
 			itemStack.setTagCompound(nbt);
 	}
 	
@@ -97,13 +99,11 @@ public class ItemBattery extends ItemEnergy implements IHasModel {
 		}
 		
 		if (nbt.hasKey("Energy")) {
-			if (!this.iscreative) tooltip.add(TextFormatting.DARK_RED + "Energy Stored: " + TextFormatting.WHITE + stack.getTagCompound().getInteger("Energy") + "/" + this.maxEnergy + "RE");
-			else tooltip.add(TextFormatting.DARK_RED + "Energy Stored: " + TextFormatting.WHITE + "MaxRE");
+			tooltip.add(TextFormatting.DARK_RED + "Energy Stored: " + TextFormatting.WHITE + EnergyHandler.getEnergyForDisplay(stack.getTagCompound().getInteger("Energy"), this.maxEnergy));
 		} else {
 			nbt.setInteger("Energy", this.energy);
 			stack.setTagCompound(nbt);
-			if (!this.iscreative) tooltip.add(TextFormatting.DARK_RED + "Energy Stored: " + TextFormatting.WHITE + this.energy + "/" + this.maxEnergy + "RE");
-			else tooltip.add(TextFormatting.DARK_RED + "Energy Stored: " + TextFormatting.WHITE + "MaxRE");
+			tooltip.add(TextFormatting.DARK_RED + "Energy Stored: " + TextFormatting.WHITE + EnergyHandler.getEnergyForDisplay(this.energy, this.maxEnergy));
 		}
 	}
 	

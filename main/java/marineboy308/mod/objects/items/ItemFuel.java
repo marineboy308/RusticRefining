@@ -4,6 +4,7 @@ import java.util.List;
 
 import marineboy308.mod.Main;
 import marineboy308.mod.init.ItemInit;
+import marineboy308.mod.util.handlers.EnergyHandler;
 import marineboy308.mod.util.interfaces.IHasModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -46,7 +47,7 @@ public class ItemFuel extends ItemEnergy implements IHasModel {
 	
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		tooltip.add(TextFormatting.DARK_RED + "Energy: " + TextFormatting.WHITE + this.energy + "RE");
+		tooltip.add(TextFormatting.DARK_RED + "Energy: " + TextFormatting.WHITE + EnergyHandler.simplifyEnergyForDisplay(this.energy));
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 	

@@ -49,7 +49,7 @@ public class RegistryHandler {
 	}
 	
 	public static void perInitRegistries() {
-		
+		SmeltingHandler.registerSmelting();
 	}
 	
 	public static void initRegistries() {

@@ -137,6 +137,30 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
         return compound;
     }
     
+    public void loadFromNbt(NBTTagCompound compound)
+    {
+        this.tileEntityItemStacks = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
+
+        if (compound.hasKey("Items", 9)) {
+            ItemStackHelper.loadAllItems(compound, this.tileEntityItemStacks);
+        }
+
+        if (compound.hasKey("CustomName", 8)) {
+            this.customName = compound.getString("CustomName");
+        }
+    }
+
+    public NBTTagCompound saveToNbt(NBTTagCompound compound)
+    {
+        ItemStackHelper.saveAllItems(compound, this.tileEntityItemStacks, false);
+
+        if (this.hasCustomName()) {
+            compound.setString("CustomName", this.customName);
+        }
+
+        return compound;
+    }
+    
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound nbt = new NBTTagCompound();

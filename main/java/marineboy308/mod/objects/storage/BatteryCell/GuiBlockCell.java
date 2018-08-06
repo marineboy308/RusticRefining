@@ -3,6 +3,7 @@ package marineboy308.mod.objects.storage.BatteryCell;
 import java.util.Arrays;
 
 import marineboy308.mod.util.Reference;
+import marineboy308.mod.util.handlers.EnergyHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -53,12 +54,12 @@ public class GuiBlockCell extends GuiContainer {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
-        if (this.isPointInRegion(58, 23, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(this.tileentity.getField(0) + "/" + this.tileentity.getField(1) + "RE"), mouseX, mouseY,this.mc.fontRenderer);
-        if (this.isPointInRegion(107, 23, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(this.tileentity.getField(2) + "/" + this.tileentity.getField(3) + "RE"), mouseX, mouseY,this.mc.fontRenderer);
-        if (this.isPointInRegion(58, 41, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(this.tileentity.getField(4) + "/" + this.tileentity.getField(5) + "RE"), mouseX, mouseY,this.mc.fontRenderer);
-        if (this.isPointInRegion(107, 41, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(this.tileentity.getField(6) + "/" + this.tileentity.getField(7) + "RE"), mouseX, mouseY,this.mc.fontRenderer);
-        if (this.isPointInRegion(58, 59, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(this.tileentity.getField(8) + "/" + this.tileentity.getField(9) + "RE"), mouseX, mouseY,this.mc.fontRenderer);
-        if (this.isPointInRegion(107, 59, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(this.tileentity.getField(10) + "/" + this.tileentity.getField(11) + "RE"), mouseX, mouseY,this.mc.fontRenderer);
+        if (this.isPointInRegion(58, 23, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(EnergyHandler.getEnergyForDisplay(this.tileentity.getField(0), this.tileentity.getField(1))), mouseX, mouseY,this.mc.fontRenderer);
+        if (this.isPointInRegion(107, 23, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(EnergyHandler.getEnergyForDisplay(this.tileentity.getField(2), this.tileentity.getField(3))), mouseX, mouseY,this.mc.fontRenderer);
+        if (this.isPointInRegion(58, 41, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(EnergyHandler.getEnergyForDisplay(this.tileentity.getField(4), this.tileentity.getField(5))), mouseX, mouseY,this.mc.fontRenderer);
+        if (this.isPointInRegion(107, 41, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(EnergyHandler.getEnergyForDisplay(this.tileentity.getField(6), this.tileentity.getField(7))), mouseX, mouseY,this.mc.fontRenderer);
+        if (this.isPointInRegion(58, 59, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(EnergyHandler.getEnergyForDisplay(this.tileentity.getField(8), this.tileentity.getField(9))), mouseX, mouseY,this.mc.fontRenderer);
+        if (this.isPointInRegion(107, 59, 11, 15, mouseX, mouseY)) this.drawHoveringText(Arrays.asList(EnergyHandler.getEnergyForDisplay(this.tileentity.getField(10), this.tileentity.getField(11))), mouseX, mouseY,this.mc.fontRenderer);
     }
 	
 	protected boolean isPointInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY)
