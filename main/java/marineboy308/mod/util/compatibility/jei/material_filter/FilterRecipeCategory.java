@@ -52,6 +52,7 @@ public class FilterRecipeCategory extends AbstractFilterRecipeCategory<FilterRec
 		stacks.init(input, true, 3, 3);
 		stacks.init(output1, false, 57, 26);
 		stacks.init(output2, false, 3, 48);
+		stacks.init(fuel, true, 111, 57);
 		stacks.set(ingredients);
 	};
 }

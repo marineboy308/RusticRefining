@@ -1,9 +1,11 @@
-package marineboy308.mod.objects.storage.BatteryCell;
+package marineboy308.mod.objects.storage.StorageCell;
 
-import marineboy308.mod.objects.items.ItemBattery;
+import marineboy308.mod.objects.storage.BatteryCell.ContainerBlockCell;
+import marineboy308.mod.util.handlers.UpgradeHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
@@ -17,26 +19,23 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.walkers.ItemStackDataLists;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityBlockCell extends TileEntityLockable implements ITickable, ISidedInventory {
+public class TileEntityBlockStorageCell extends TileEntityLockable implements ITickable, ISidedInventory {
 
-    private static final int[] OUTPUT_SLOTS = new int[] {};
-    private static final int[] INPUT_SLOTS = new int[] {0,1,2,3,4,5};
+    private static final int[] OUTPUT_SLOTS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+														 10,11,12,13,14,15,16,17,18,19,
+														 20,21,22,23,24,25,26,27,28,29,
+														 30,31,32,33,34,35,36,37,38,39};
+    private static final int[] INPUT_SLOTS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+    													10,11,12,13,14,15,16,17,18,19,
+    													20,21,22,23,24,25,26,27,28,29,
+    													30,31,32,33,34,35,36,37,38,39};
     
-    private NonNullList<ItemStack> tileEntityItemStacks = NonNullList.<ItemStack>withSize(6, ItemStack.EMPTY);
+    private NonNullList<ItemStack> tileEntityItemStacks = NonNullList.<ItemStack>withSize(43, ItemStack.EMPTY);
     
-    private int batteryCharge0;
-    private int batteryMaxCharge0;
-    private int batteryCharge1;
-    private int batteryMaxCharge1;
-    private int batteryCharge2;
-    private int batteryMaxCharge2;
-    private int batteryCharge3;
-    private int batteryMaxCharge3;
-    private int batteryCharge4;
-    private int batteryMaxCharge4;
-    private int batteryCharge5;
-    private int batteryMaxCharge5;
+    private int storagelevel;
     private String customName;
 
     @Override
@@ -91,7 +90,7 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
     @Override
     public String getName()
     {
-        return this.hasCustomName() ? this.customName : "container.cell_battery";
+        return this.hasCustomName() ? this.customName : "container.cell_storage";
     }
 
     @Override
@@ -107,7 +106,7 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
 
     public static void registerFixes(DataFixer fixer)
     {
-        fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityBlockCell.class, new String[] {"Items"}));
+        fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityBlockStorageCell.class, new String[] {"Items"}));
     }
 
     @Override
@@ -116,6 +115,7 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
         super.readFromNBT(compound);
         this.tileEntityItemStacks = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.tileEntityItemStacks);
+        this.storagelevel = compound.getInteger("StorageLevel");
         
         if (compound.hasKey("CustomName", 8))
         {
@@ -127,6 +127,7 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
+        compound.setInteger("StorageLevel", this.storagelevel);
         ItemStackHelper.saveAllItems(compound, this.tileEntityItemStacks);
         
         if (this.hasCustomName())
@@ -205,94 +206,36 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
     	boolean flag = false;
 
         if (!this.world.isRemote) {
-        	ItemStack b0 = this.tileEntityItemStacks.get(0);
-        	ItemStack b1 = this.tileEntityItemStacks.get(1);
-        	ItemStack b2 = this.tileEntityItemStacks.get(2);
-        	ItemStack b3 = this.tileEntityItemStacks.get(3);
-        	ItemStack b4 = this.tileEntityItemStacks.get(4);
-        	ItemStack b5 = this.tileEntityItemStacks.get(5);
+        	ItemStack u0 = this.tileEntityItemStacks.get(40);
+        	ItemStack u1 = this.tileEntityItemStacks.get(41);
+        	ItemStack u2 = this.tileEntityItemStacks.get(42);
         	
-        	if (!b0.isEmpty()) {
-	        	if (b0.getItem() instanceof ItemBattery) {
-	        		this.batteryCharge0 = ((ItemBattery)b0.getItem()).getItemEnergy(b0);
-	        		this.batteryMaxCharge0 = ((ItemBattery)b0.getItem()).getItemMaxEnergy(b0);
-	        		flag = true;
-	        	}
-        	} else {
-        		this.batteryCharge0 = 0;
-        		this.batteryMaxCharge0 = 0;
-        		flag = true;
+        	int templevel = 0;
+        	
+        	if (!u0.isEmpty()) {
+        		if (UpgradeHandler.isItemStorageUpgrade(u0.getItem())) {
+        			templevel += 1;
+        		}
+        	}
+        	if (!u1.isEmpty()) {
+        		if (UpgradeHandler.isItemStorageUpgrade(u1.getItem())) {
+        			templevel += 1;
+        		}
+        	}
+        	if (!u2.isEmpty()) {
+        		if (UpgradeHandler.isItemStorageUpgrade(u2.getItem())) {
+        			templevel += 1;
+        		}
         	}
         	
-        	if (!b1.isEmpty()) {
-	        	if (b1.getItem() instanceof ItemBattery) {
-	        		this.batteryCharge1 = ((ItemBattery)b1.getItem()).getItemEnergy(b1);
-	        		this.batteryMaxCharge1 = ((ItemBattery)b1.getItem()).getItemMaxEnergy(b1);
-	        		flag = true;
-	        	}
-        	} else {
-        		this.batteryCharge1 = 0;
-        		this.batteryMaxCharge1 = 0;
-        		flag = true;
-        	}
-        	
-        	if (!b2.isEmpty()) {
-	        	if (b2.getItem() instanceof ItemBattery) {
-	        		this.batteryCharge2 = ((ItemBattery)b2.getItem()).getItemEnergy(b2);
-	        		this.batteryMaxCharge2 = ((ItemBattery)b2.getItem()).getItemMaxEnergy(b2);
-	        		flag = true;
-	        	}
-        	} else {
-        		this.batteryCharge2 = 0;
-        		this.batteryMaxCharge2 = 0;
-        		flag = true;
-        	}
-        	
-        	if (!b3.isEmpty()) {
-	        	if (b3.getItem() instanceof ItemBattery) {
-	        		this.batteryCharge3 = ((ItemBattery)b3.getItem()).getItemEnergy(b3);
-	        		this.batteryMaxCharge3 = ((ItemBattery)b3.getItem()).getItemMaxEnergy(b3);
-	        		flag = true;
-	        	}
-        	} else {
-        		this.batteryCharge3 = 0;
-        		this.batteryMaxCharge3 = 0;
-        		flag = true;
-        	}
-        	
-        	if (!b4.isEmpty()) {
-	        	if (b4.getItem() instanceof ItemBattery) {
-	        		this.batteryCharge4 = ((ItemBattery)b4.getItem()).getItemEnergy(b4);
-	        		this.batteryMaxCharge4 = ((ItemBattery)b4.getItem()).getItemMaxEnergy(b4);
-	        		flag = true;
-	        	}
-        	} else {
-        		this.batteryCharge4 = 0;
-        		this.batteryMaxCharge4 = 0;
-        		flag = true;
-        	}
-        	
-        	if (!b5.isEmpty()) {
-	        	if (b5.getItem() instanceof ItemBattery) {
-	        		this.batteryCharge5 = ((ItemBattery)b5.getItem()).getItemEnergy(b5);
-	        		this.batteryMaxCharge5 = ((ItemBattery)b5.getItem()).getItemMaxEnergy(b5);
-	        		flag = true;
-	        	}
-        	} else {
-        		this.batteryCharge5 = 0;
-        		this.batteryMaxCharge5 = 0;
-        		flag = true;
-        	}
+        	this.storagelevel = templevel;
+        	templevel = 0;
+        	flag = true;
         }
         
         if (flag) {
         	this.markDirty();
         }
-    }
-    
-    public static boolean isItemBattery(ItemStack stack)
-    {
-        return stack.getItem() instanceof ItemBattery;
     }
 
     @Override
@@ -317,11 +260,19 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
     public void closeInventory(EntityPlayer player)
     {
     }
+    
+    @SideOnly(Side.CLIENT)
+    public static int getStorageLevel(IInventory inventory) {
+    	return inventory.getField(0);
+    }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack)
     {
-        return isItemBattery(stack);
+    	if (index < 40) {
+    		return true;
+    	}
+        return UpgradeHandler.isItemStorageUpgrade(stack.getItem());
     }
 
     @Override
@@ -349,7 +300,7 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
     @Override
     public String getGuiID()
     {
-        return "rusticrefining:cell_battery";
+        return "rusticrefining:cell_storage";
     }
 
     @Override
@@ -364,29 +315,7 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
         switch (id)
         {
             case 0:
-                return this.batteryCharge0;
-            case 1:
-            	return this.batteryMaxCharge0;
-            case 2:
-                return this.batteryCharge1;
-            case 3:
-            	return this.batteryMaxCharge1;
-            case 4:
-                return this.batteryCharge2;
-            case 5:
-            	return this.batteryMaxCharge2;
-            case 6:
-                return this.batteryCharge3;
-            case 7:
-            	return this.batteryMaxCharge3;
-            case 8:
-                return this.batteryCharge4;
-            case 9:
-            	return this.batteryMaxCharge4;
-            case 10:
-                return this.batteryCharge5;
-            case 11:
-            	return this.batteryMaxCharge5;
+                return this.storagelevel;
             default:
                 return 0;
         }
@@ -398,40 +327,7 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
         switch (id)
         {
             case 0:
-                this.batteryCharge0 = value;
-                break;
-            case 1:
-                this.batteryMaxCharge0 = value;
-                break;
-            case 2:
-                this.batteryCharge1 = value;
-                break;
-            case 3:
-                this.batteryMaxCharge1 = value;
-                break;
-            case 4:
-                this.batteryCharge2 = value;
-                break;
-            case 5:
-                this.batteryMaxCharge2 = value;
-                break;
-            case 6:
-                this.batteryCharge3 = value;
-                break;
-            case 7:
-                this.batteryMaxCharge3 = value;
-                break;
-            case 8:
-                this.batteryCharge4 = value;
-                break;
-            case 9:
-                this.batteryMaxCharge4 = value;
-                break;
-            case 10:
-                this.batteryCharge5 = value;
-                break;
-            case 11:
-                this.batteryMaxCharge5 = value;
+                this.storagelevel = value;
                 break;
         }
     }
@@ -439,7 +335,7 @@ public class TileEntityBlockCell extends TileEntityLockable implements ITickable
     @Override
     public int getFieldCount()
     {
-        return 12;
+        return 1;
     }
 
     @Override

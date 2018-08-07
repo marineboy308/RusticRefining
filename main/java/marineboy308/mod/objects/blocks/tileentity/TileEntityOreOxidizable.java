@@ -1,7 +1,7 @@
 package marineboy308.mod.objects.blocks.tileentity;
 
 import marineboy308.mod.init.BlockInit;
-import marineboy308.mod.objects.blocks.BlockOre;
+import marineboy308.mod.objects.blocks.BlockOreOxidizable;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -15,6 +15,8 @@ public class TileEntityOreOxidizable extends TileEntity implements ITickable {
 
     private int oxidizeTime;
     private boolean oxidized;
+    
+    
 
     @Override
     public void readFromNBT(NBTTagCompound compound)
@@ -78,8 +80,8 @@ public class TileEntityOreOxidizable extends TileEntity implements ITickable {
         	if (block == BlockInit.ORE_COPPER_OXIDIZED && !this.oxidized) {
         		this.oxidized = true;
         		flag = true;
-        	} else if (this.oxidizeTime >= 1200) {
-        		BlockOre.oxidize(this.world, pos);
+        	} else if (this.oxidizeTime >= 12000) {
+        		BlockOreOxidizable.oxidize(this.world, pos);
         		this.oxidizeTime = 0;
         		this.oxidized = true;
         		flag = true;
@@ -117,8 +119,6 @@ public class TileEntityOreOxidizable extends TileEntity implements ITickable {
         			++this.oxidizeTime;
         			flag = true;
         		}
-        		
-        		System.out.println(this.oxidizeTime);
         	}
         }
         

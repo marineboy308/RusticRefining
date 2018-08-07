@@ -29,4 +29,11 @@ public class UpgradeHandler {
     	}
 		return false;
 	}
+	
+	public static boolean isItemStorageUpgrade(Item item) {
+		if (isItemUpgrade(item)) {
+			return true;
+		}
+		return false;
+	}
 }

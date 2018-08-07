@@ -49,12 +49,13 @@ public class RegistryHandler {
 	}
 	
 	public static void perInitRegistries() {
-		SmeltingHandler.registerSmelting();
+		
 	}
 	
 	public static void initRegistries() {
 		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
 		OreDictionaryCompatibility.register();
+		SmeltingHandler.registerSmelting();
 	}
 	
 	public static void postInitRegistries() {

@@ -11,4 +11,5 @@ public class Reference {
 	public static final int GUI_MATERIAL_FILTER = 0;
 	public static final int GUI_CHARGER_BATTERY = 1;
 	public static final int GUI_CELL_BATTERY = 2;
+	public static final int GUI_CELL_STORAGE = 3;
 }

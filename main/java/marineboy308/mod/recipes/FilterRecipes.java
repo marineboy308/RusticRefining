@@ -27,10 +27,11 @@ public class FilterRecipes {
 
     private FilterRecipes()
     {
-        addFilteringRecipeForBlock(Blocks.DIRT, new ItemStack(ItemInit.BALL_DIRT, 4), new ItemStack(ItemInit.SHARD_GOLD, 1), 0.25F, 0.0F);
-        addFilteringRecipeForBlock(Blocks.GRAVEL, new ItemStack(ItemInit.PEBBLE, 4), new ItemStack(ItemInit.SHARD_IRON, 1), 0.3F, 0.0F);
-        addFilteringRecipeForBlock(Blocks.SAND, new ItemStack(ItemInit.PILE_SAND, 2), new ItemStack(ItemInit.SHARD_DIAMOND, 1), 0.05F, 0.0F);
-        addFilteringRecipeForBlock(BlockInit.CONDENSED_DIRT, new ItemStack(Blocks.DIRT, 4), new ItemStack(ItemInit.SHARD_GOLD, 4), 0.5F, 0.0F);
+        addFilteringRecipeForBlock(Blocks.DIRT, new ItemStack(ItemInit.BALL_DIRT, 4), new ItemStack(ItemInit.SHARD_GOLD, 1), 0.25F, 1.0F);
+        addFilteringRecipeForBlock(Blocks.GRAVEL, new ItemStack(ItemInit.PEBBLE, 4), new ItemStack(ItemInit.SHARD_IRON, 1), 0.3F, 1.0F);
+        addFilteringRecipeForBlock(Blocks.SAND, new ItemStack(ItemInit.PILE_SAND, 2), new ItemStack(ItemInit.SHARD_DIAMOND, 1), 0.05F, 1.0F);
+        addFilteringRecipeForBlock(Blocks.COBBLESTONE, new ItemStack(Blocks.GRAVEL, 1), new ItemStack(ItemInit.SHARD_EMERALD, 1), 0.01F, 1.5F);
+        addFilteringRecipeForBlock(BlockInit.CONDENSED_DIRT, new ItemStack(Blocks.DIRT, 4), new ItemStack(ItemInit.SHARD_GOLD, 4), 0.5F, 2.5F);
     }
 
     public void addFilteringRecipeForBlock(Block input, ItemStack output1, ItemStack output2, float chance, float experience)

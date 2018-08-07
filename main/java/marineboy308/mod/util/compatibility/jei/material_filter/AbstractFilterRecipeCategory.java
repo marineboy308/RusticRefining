@@ -15,7 +15,7 @@ public abstract class AbstractFilterRecipeCategory<T extends IRecipeWrapper> imp
 	protected static final int input = 0;
 	protected static final int output1 = 1;
 	protected static final int output2 = 2;
-	protected static final int fuel = 4;
+	protected static final int fuel = 3;
 	
 	protected final IDrawableStatic staticEnergy;
 	protected final IDrawableAnimated animatedEnergy;

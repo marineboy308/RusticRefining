@@ -34,7 +34,7 @@ public class JEICompatibility implements IModPlugin {
 		
 		registry.addRecipes(FilterRecipeMaker.getRecipes(jeiHelpers), RecipeCategories.FILTER);
 		registry.addRecipeClickArea(GuiBlockFilter.class, 62, 32, 32, 14, RecipeCategories.FILTER);
-		recipeTransfer.addRecipeTransferHandler(ContainerBlockFilter.class, RecipeCategories.FILTER, 0, 0, 3, 36);
+		recipeTransfer.addRecipeTransferHandler(ContainerBlockFilter.class, RecipeCategories.FILTER, 0, 1, 4, 36);
 	}
 	
 	public static String translateToLocal(String key) {

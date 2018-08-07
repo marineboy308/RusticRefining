@@ -13,17 +13,17 @@ import net.minecraft.item.ItemStack;
 
 public class FilterRecipe implements IRecipeWrapper{
 
-	private final ItemStack input;
+	private final List<ItemStack> inputs;
 	private final List<ItemStack> outputs;
 	
-	public FilterRecipe(ItemStack input, List<ItemStack> outputs) {
-		this.input = input;
+	public FilterRecipe(List<ItemStack> inputs, List<ItemStack> outputs) {
+		this.inputs = inputs;
 		this.outputs = outputs;
 	}
 	
 	@Override
 	public void getIngredients(IIngredients ingredients) {
-		ingredients.setInput(ItemStack.class, input);
+		ingredients.setInputs(ItemStack.class, inputs);
 		ingredients.setOutputs(ItemStack.class, outputs);
 	}
 	

@@ -47,6 +47,10 @@ public class ItemInit {
 	public static final Item ENERGIZED_COAL = new ItemFuel("energized_coal",2000,2000,20);
 	public static final Item ENERGIZED_POWDER = new ItemFuel("energized_powder",5000,5000,100);
 	
+	//Battery Requirements
+	public static final Item CASING_BATTERY = new ItemBase("casing_battery");
+	public static final Item ROD_AND_ELECTROLYTE = new ItemBase("rod_and_electrolyte");
+	
 	//Energy Storages
 	public static final Item BATTERY = new ItemBattery("battery",10000,10000,10,false);
 	public static final Item BATTERY_CREATIVE = new ItemBattery("battery_creative",Integer.MAX_VALUE,Integer.MAX_VALUE,1000,true);
