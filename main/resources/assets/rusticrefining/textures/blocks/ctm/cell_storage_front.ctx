@@ -1,0 +1,7 @@
+{
+	"type": "CTM",
+	"textures": [
+		"blocks/cell_storage_front",
+		"./cell_storage_front"
+	]
+}
