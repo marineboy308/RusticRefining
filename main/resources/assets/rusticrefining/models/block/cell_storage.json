@@ -11,6 +11,6 @@
 	},
 	"ctm": {
 		"model": { "model": "cube" },
-		"face": "ctm/cell_storage_front.cf"
+		"face": "rusticrefining:ctm/cell_storage_front.cf"
 	}
 }
