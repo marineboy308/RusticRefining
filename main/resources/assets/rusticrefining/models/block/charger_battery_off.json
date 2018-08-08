@@ -1,0 +1,12 @@
+{
+	"parent": "block/orientable",
+	"textures": {
+		"up": "rusticrefining:blocks/charger_battery_top",
+		"down": "rusticrefining:blocks/machine_bottom",
+		"north": "rusticrefining:blocks/charger_battery_front_off",
+		"east": "rusticrefining:blocks/machine_side",
+		"south": "rusticrefining:blocks/machine_side",
+		"west": "rusticrefining:blocks/machine_side",
+		"particle": "rusticrefining:blocks/machine_bottom"
+	}
+}

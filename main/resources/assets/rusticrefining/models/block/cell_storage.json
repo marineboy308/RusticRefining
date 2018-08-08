@@ -1,0 +1,16 @@
+	{
+	"parent": "block/cube_all",
+	"textures": {
+		"up": "rusticrefining:blocks/cell_storage_side",
+		"down": "rusticrefining:blocks/cell_storage_side",
+		"north": "rusticrefining:blocks/cell_storage_front",
+		"east": "rusticrefining:blocks/cell_storage_side",
+		"south": "rusticrefining:blocks/cell_storage_side",
+		"west": "rusticrefining:blocks/cell_storage_side",
+		"particle": "rusticrefining:blocks/machine_bottom"
+	},
+	"ctm": {
+		"model": { "model": "cube" },
+		"face": "ctm/cell_storage_front.cf"
+	}
+}
