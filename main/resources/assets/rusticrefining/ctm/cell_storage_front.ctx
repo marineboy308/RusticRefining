@@ -1,0 +1,7 @@
+{
+	"type": "CTM",
+	"textures": [
+		"rusticrefining:blocks/cell_storage_front",
+		"./cell_storage_front"
+	]
+}
